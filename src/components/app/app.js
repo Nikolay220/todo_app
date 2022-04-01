@@ -2,6 +2,7 @@ import React from "react";
 import Footer from "../footer/footer";
 import TaskList from "../task-list";
 import NewTaskForm from "../new-task-form";
+import "./app.css";
 
 const App = () => {
   var today = new Date();

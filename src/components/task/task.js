@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 // function onChangeHandler(event){
 //     event.target.value = event.target.value;
 // };
+import "./task.css";
 
 class Task extends React.Component{
     constructor(props){

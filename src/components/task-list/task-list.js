@@ -2,20 +2,20 @@ import React from "react";
 import Task from "../task";
 import "./task-list.css";
 
-const TaskList = ({ todoListItems } = {}) => {
+const TaskList = ({ todoListItems, onTaskClicked, onCloseBtnClicked } = {}) => {
   
   const completedItems = todoListItems.map((item) => {
     let listItem;
     if(item.status){
       listItem = (
         <li className={item.status} key={item.id}>
-          <Task itemProps={item} />
+          <Task onCloseBtnClicked={onCloseBtnClicked} onTaskClicked={onTaskClicked} itemProps={item} />
         </li>
       );
     }else{
       listItem = (
         <li key={item.id}>
-          <Task itemProps={item} />
+          <Task onCloseBtnClicked={onCloseBtnClicked} onTaskClicked={onTaskClicked} itemProps={item} />
         </li>  
       );
     }

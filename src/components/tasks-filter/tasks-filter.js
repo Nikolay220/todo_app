@@ -1,11 +1,11 @@
 import React from "react";
 import "./tasks-filter.css";
 
-const TasksFilter = ({itemProps}) => {
+const TasksFilter = ({itemProps, filterBtnHandler}) => {
     if(itemProps.selected)
-        return <button className="selected">{itemProps.content}</button>;
+        return <button onClick={()=>{filterBtnHandler(itemProps.id)}} className="selected">{itemProps.content}</button>;
     else
-        return <button>{itemProps.content}</button>;
+        return <button onClick={()=>{filterBtnHandler(itemProps.id)}}>{itemProps.content}</button>;
 }
 
 export default TasksFilter;

@@ -2,22 +2,22 @@ import React from "react";
 import TasksFilter from "../tasks-filter";
 import "./footer.css";
 
-const Footer = ({filterListItems})=>{
+const Footer = ({clearCompletedTasksHandler, filterListItems, filterBtnHandler, activeItems})=>{
     const filters = filterListItems.map((item)=>{
-        let {id,...itemProps}={...item};
+        let {...itemProps}={...item};
         return (
-            <li key={id}>
-                <TasksFilter itemProps={itemProps}/>                
+            <li key={itemProps.id}>
+                <TasksFilter filterBtnHandler={filterBtnHandler} itemProps={itemProps}/>                
             </li>
         )   
     });
     return(
         <footer className="footer">
-            <span className="todo-count">1 items left</span>
+            <span className="todo-count">{activeItems} items left</span>
             <ul className="filters">
                 {filters}
             </ul>
-            <button className="clear-completed">Clear completed</button>
+            <button onClick={clearCompletedTasksHandler} className="clear-completed">Clear completed</button>
         </footer>
     );
 }

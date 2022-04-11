@@ -1,7 +1,7 @@
 import React from "react";
 import Footer from "../footer/footer";
 import TaskList from "../task-list";
-import NewTaskForm from "../new-task-form";
+import NewTaskBar from "../new-task-bar";
 import "./app.css";
 
 let taskId = 1;
@@ -203,7 +203,7 @@ class App extends React.Component {
       <section className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <NewTaskForm onFormSubmit={this.addTaskHandler} />
+          <NewTaskBar onFormSubmit={this.addTaskHandler} />
         </header>
         <section className="main">
           <TaskList

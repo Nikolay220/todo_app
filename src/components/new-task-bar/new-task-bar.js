@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import "./new-task-form.css";
+import "./new-task-bar.css";
 
-class NewTaskForm extends React.Component {
+class NewTaskBar extends React.Component {
   static defaultProps = {
     onFormSubmit: () => {
       throw new Error("onFormSubmit property is undefined! Check it!");
@@ -38,4 +38,4 @@ class NewTaskForm extends React.Component {
   }
 }
 
-export default NewTaskForm;
+export default NewTaskBar;

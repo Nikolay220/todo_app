@@ -2,12 +2,28 @@ import React from "react";
 import Footer from "../footer/footer";
 import TaskList from "../task-list";
 import NewTaskBar from "../new-task-bar";
-import PropTypes from "prop-types";
 
 import "./app.css";
 
-let taskId = 4;
+let taskId = 1;
 
+// массив allTasks отражает актуальное содержание списка задач,
+// возник, потому что появились фильтры,
+// надо где-то хранить весь массив, чтобы вернуться к нему
+// после возвращения от фильтра Active или Completed
+// к фильтру All
+
+let allTasks = [
+  createNewListItem(taskId++,"Completed task","completed","completed"),
+  createNewListItem(taskId++,"Editing task","editing"),
+  createNewListItem(taskId++,"Active task","")
+];
+
+let filters = [
+  { id: "q1", selected: true, content: "All" },
+  { id: "q2", selected: false, content: "Active" },
+  { id: "q3", selected: false, content: "Completed" },
+];
 
 function createNewListItem(id, description, status, statusBeforeEditing = "") {
   return {
@@ -34,29 +50,23 @@ function getObjsArrayIndexById(objsArr, id) {
 }
 
 class App extends React.Component {
-  static propTypes = {
-    allTasks: PropTypes.arrayOf(PropTypes.object).isRequired,
-    filters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  };
   constructor(props) {
     super(props);
     this.state = {
-      todoListItems: [...props.allTasks],
-      filterListItems: [...props.filters],
+      todoListItems: [...allTasks],
+      filterListItems: [...filters],
     };
-    this.allTasks = [...props.allTasks];
-    this.filters = [...props.filters];
   }
 
   // при работе фильтров allTasks не изменяется
   // возвращает массив задач в зависимости от фильтра
   filterList(content) {
     if (content === "All") {
-      return this.allTasks;
+      return allTasks;
     } else if (content === "Active") {
-      return this.allTasks.filter((value) => value.status === "");
+      return allTasks.filter((value) => value.status === "");
     } else if (content === "Completed") {
-      return this.allTasks.filter((value) => value.status === "completed");
+      return allTasks.filter((value) => value.status === "completed");
     }
   }
 
@@ -68,7 +78,7 @@ class App extends React.Component {
   }
 
   chooseOtherFilter(content) {
-    for (let val of this.filters) {
+    for (let val of filters) {
       if (val.selected === true) val.selected = false;
       if (val.content === content) val.selected = true;
     }
@@ -76,7 +86,7 @@ class App extends React.Component {
 
   chooseOtherFilterById(id) {
     let filterIndex=-1;
-    this.filters.forEach((value,index)=>{
+    filters.forEach((value,index)=>{
       if (value.selected === true) value.selected = false;
       if (value.id === id) {
         value.selected = true;
@@ -92,11 +102,11 @@ class App extends React.Component {
   }
 
   isTaskCompleted(id) {
-    let index = this.allTasks.findIndex((value) => {
+    let index = allTasks.findIndex((value) => {
       return value.id === id;
     });
     if (index >= 0) {
-      if (this.allTasks[index].status === "completed") {
+      if (allTasks[index].status === "completed") {
         return true;
       }
     }
@@ -106,30 +116,30 @@ class App extends React.Component {
   // Callback functions  на основе не предыдущего state, а переменной,
   // содержащей массив из state.
   taskClickedHandler = (id) => {
-    const clickedTaskIndex = this.allTasks.findIndex((value) => value.id === id);
-    this.allTasks[clickedTaskIndex].status =
-      this.allTasks[clickedTaskIndex].status === "" ? "completed" : "";
-    this.allTasks[clickedTaskIndex].statusBeforeEditing =
-      this.allTasks[clickedTaskIndex].status;
+    const clickedTaskIndex = allTasks.findIndex((value) => value.id === id);
+    allTasks[clickedTaskIndex].status =
+      allTasks[clickedTaskIndex].status === "" ? "completed" : "";
+    allTasks[clickedTaskIndex].statusBeforeEditing =
+      allTasks[clickedTaskIndex].status;
     this.updateTasks();
   };
 
   filterBtnHandler = (id) => {
     let tasks;
     let filterIndex = this.chooseOtherFilterById(id);
-    tasks = this.filterList(this.filters[filterIndex].content);
-    this.setState({ filterListItems: this.filters, todoListItems: tasks });
+    tasks = this.filterList(filters[filterIndex].content);
+    this.setState({ filterListItems: filters, todoListItems: tasks });
   };
 
   closeBtnHandler = (id) => {
-    this.allTasks = this.allTasks.filter((value) => {
+    allTasks = allTasks.filter((value) => {
       return value.id !== id;
     });
     this.updateTasks();
   };
 
   clearCompletedTasksHandler = () => {
-    this.allTasks = this.allTasks.filter((value) => {
+    allTasks = allTasks.filter((value) => {
       return value.status !== "completed";
     });
     this.updateTasks();
@@ -137,7 +147,7 @@ class App extends React.Component {
 
   addTaskHandler = (text) => {
     let newItem = createNewListItem(taskId++, text, "");
-    this.allTasks.push(newItem);
+    allTasks.push(newItem);
     let choosedFilterContent = this.getChoosedFilterContent();
     if (choosedFilterContent === "Completed") {
       this.chooseOtherFilter("All");
@@ -149,17 +159,17 @@ class App extends React.Component {
   };
 
   editTaskHandler = (taskId) => {
-    let index = getObjsArrayIndexById(this.allTasks, taskId);
-    this.allTasks[index].statusBeforeEditing = this.allTasks[index].status;
-    this.allTasks[index].status = "editing";
-    this.setState({ todoListItems: this.allTasks });
+    let index = getObjsArrayIndexById(allTasks, taskId);
+    allTasks[index].statusBeforeEditing = allTasks[index].status;
+    allTasks[index].status = "editing";
+    this.setState({ todoListItems: allTasks });
   };
 
   onTaskEditFinished = (taskId, newText) => {
-    let index = getObjsArrayIndexById(this.allTasks, taskId);
-    this.allTasks[index].status = this.allTasks[index].statusBeforeEditing;
-    this.allTasks[index].description = newText;
-    this.setState({ todoListItems: this.allTasks });
+    let index = getObjsArrayIndexById(allTasks, taskId);
+    allTasks[index].status = allTasks[index].statusBeforeEditing;
+    allTasks[index].description = newText;
+    this.setState({ todoListItems: allTasks });
   };
   render() {
     return (
@@ -177,7 +187,7 @@ class App extends React.Component {
             onEditFinished={this.onTaskEditFinished}
           />
           <Footer
-            activeItems={getNumOfActiveTasks(this.allTasks)}
+            activeItems={getNumOfActiveTasks(allTasks)}
             clearCompletedTasksHandler={this.clearCompletedTasksHandler}
             filterBtnHandler={this.filterBtnHandler}
             filterListItems={this.state.filterListItems}

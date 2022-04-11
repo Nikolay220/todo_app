@@ -13,27 +13,9 @@ let taskId = 1;
 // к фильтру All
 
 let allTasks = [
-  {
-    id: taskId++,
-    status: "completed",
-    description: "Completed task",
-    created: new Date(Date.now() - 14000),
-    statusBeforeEditing: "completed",
-  },
-  {
-    id: taskId++,
-    status: "editing",
-    description: "Editing task",
-    created: new Date(Date.now()),
-    statusBeforeEditing: "",
-  },
-  {
-    id: taskId++,
-    status: "",
-    description: "Active task",
-    created: new Date(Date.now() - 300000),
-    statusBeforeEditing: "",
-  },
+  createNewListItem(taskId++,"Completed task","completed","completed"),
+  createNewListItem(taskId++,"Editing task","editing"),
+  createNewListItem(taskId++,"Active task","")
 ];
 
 let defaultFilterList = [
@@ -48,12 +30,13 @@ let filters = [
   { id: "q3", selected: false, content: "Completed" },
 ];
 
-function createNewListItem(id, description) {
+function createNewListItem(id, description, status, statusBeforeEditing="") {
   return {
     id,
-    status: "",
+    status,
     description,
     created: new Date(Date.now()),
+    statusBeforeEditing
   };
 }
 function getNumOfActiveTasks(arrayOfTasks) {

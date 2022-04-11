@@ -1,11 +1,51 @@
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
-// function onEditChangeHandler(event){
-//     event.target.value = event.target.value;
-// };
+
 import "./task.css";
 
+function reformatCreationTime(time) {
+  if (time.includes("seconds"))
+    return "created " + time.split(" ")[2] + " seconds ago";
+  else if (time.includes("half")) {
+    return "created 30 seconds ago";
+  } else if (time.includes("less") && time.includes("minute")) {
+    return "created 50 seconds ago";
+  } else if (time.includes("minutes")) {
+    return "created " + time.split(" ")[0] + " minutes ago";
+  } else if (time.includes("minute")) {
+    return "created 1 minute ago";
+  } else if (time.includes("hours")) {
+    return "created " + time.split(" ")[1] + " hours ago";
+  } else if (time.includes("hour")) {
+    return "created 1 hour ago";
+  }
+  return time;
+}
+
 class Task extends React.Component {
+  
+  static defaultProps = {
+    onCloseBtnClicked: () => {
+      throw new Error("onCloseBtnClicked property is undefined! Check it!");
+    },
+    onEditFinished: () => {
+      throw new Error("onEditFinished property is undefined! Check it!");
+    },
+    onTaskClicked: () => {
+      throw new Error("onTaskClicked property is undefined! Check it!");
+    },
+    editTaskHandler: () => {
+      throw new Error("editTaskHandler property is undefined! Check it!");
+    },
+    itemProps: {
+      id: -1,
+      status: "",
+      description: "Error in task.js, itemProps - undefined",
+      created: new Date(Date.now()),
+      statusBeforeEditing: "",
+    },
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +76,9 @@ class Task extends React.Component {
           <label onClick={() => onTaskClicked(id)}>
             <span className="description">{description}</span>
             <span className="created">
-              {formatDistanceToNow(created, { includeSeconds: true })}
+              {reformatCreationTime(
+                formatDistanceToNow(created, { includeSeconds: true })
+              )}
             </span>
           </label>
           <button
@@ -54,9 +96,8 @@ class Task extends React.Component {
             className="edit"
             value={this.state.value}
             onChange={this.onEditChangeHandler}
-            onKeyDown={(evt) => {              
-              if (evt.key === "Enter")
-                onEditFinished(id, evt.target.value);
+            onKeyDown={(evt) => {
+              if (evt.key === "Enter") onEditFinished(id, evt.target.value);
             }}
           ></input>
         )}

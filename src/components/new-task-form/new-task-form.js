@@ -2,6 +2,9 @@ import React from "react";
 import "./new-task-form.css";
 
 class NewTaskForm extends React.Component {
+  static defaultProps = {
+    onFormSubmit:()=>{throw new Error("onFormSubmit property is undefined! Check it!")},
+  };
   state={curVal:''};
   inputChangeHandler=(evt)=>{    
     this.setState({curVal:evt.target.value});

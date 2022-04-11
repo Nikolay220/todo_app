@@ -9,7 +9,7 @@ class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: "Editing task",
+      value: props.itemProps.description,
     };
     this.onEditChangeHandler = this.onEditChangeHandler.bind(this);
   }
@@ -18,8 +18,12 @@ class Task extends React.Component {
   }
   render() {
     const { id, status, description, created } = this.props.itemProps;
-    const { onTaskClicked, onCloseBtnClicked } = this.props;
-
+    const {
+      onEditFinished,
+      onTaskClicked,
+      onCloseBtnClicked,
+      editTaskHandler,
+    } = this.props;
     return (
       <div>
         <div className="view">
@@ -27,7 +31,7 @@ class Task extends React.Component {
             onChange={() => onTaskClicked(id)}
             className="toggle"
             type="checkbox"
-            checked = {status==="completed"?true:false}
+            checked={status === "completed" ? true : false}
           />
           <label onClick={() => onTaskClicked(id)}>
             <span className="description">{description}</span>
@@ -35,7 +39,10 @@ class Task extends React.Component {
               {formatDistanceToNow(created, { includeSeconds: true })}
             </span>
           </label>
-          <button className="icon icon-edit"></button>
+          <button
+            onClick={() => editTaskHandler(id)}
+            className="icon icon-edit"
+          ></button>
           <button
             onClick={onCloseBtnClicked.bind(this, id)}
             className="icon icon-destroy"
@@ -47,6 +54,10 @@ class Task extends React.Component {
             className="edit"
             value={this.state.value}
             onChange={this.onEditChangeHandler}
+            onKeyDown={(evt) => {              
+              if (evt.key === "Enter")
+                onEditFinished(id, evt.target.value);
+            }}
           ></input>
         )}
       </div>

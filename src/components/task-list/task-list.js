@@ -1,5 +1,7 @@
 import React from "react";
 import Task from "../task";
+import PropTypes from "prop-types";
+
 import "./task-list.css";
 
 const TaskList = ({
@@ -54,6 +56,13 @@ TaskList.defaultProps = {
   editTaskHandler: () => {
     throw new Error("editTaskHandler property is undefined! Check it!");
   },
-  todoListItems: [],
 };
+
+TaskList.propTypes = {
+  onCloseBtnClicked: PropTypes.func,
+  onEditFinished: PropTypes.func,
+  onTaskClicked: PropTypes.func,
+  editTaskHandler: PropTypes.func,
+  todoListItems: PropTypes.array.isRequired,
+}
 export default TaskList;

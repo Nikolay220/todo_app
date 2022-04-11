@@ -1,20 +1,29 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import "./new-task-form.css";
 
 class NewTaskForm extends React.Component {
   static defaultProps = {
-    onFormSubmit:()=>{throw new Error("onFormSubmit property is undefined! Check it!")},
+    onFormSubmit: () => {
+      throw new Error("onFormSubmit property is undefined! Check it!");
+    },
   };
-  state={curVal:''};
-  inputChangeHandler=(evt)=>{    
-    this.setState({curVal:evt.target.value});
+
+  static propTypes = {
+    onFormSubmit: PropTypes.func,
   };
-  onSubmit=(evt)=>{
+
+  state = { curVal: "" };
+  inputChangeHandler = (evt) => {
+    this.setState({ curVal: evt.target.value });
+  };
+  onSubmit = (evt) => {
     evt.preventDefault();
     this.props.onFormSubmit(this.state.curVal);
-    this.setState({curVal:""});
-  }
-  render(){
+    this.setState({ curVal: "" });
+  };
+  render() {
     return (
       <form onSubmit={this.onSubmit}>
         <input
@@ -26,7 +35,7 @@ class NewTaskForm extends React.Component {
         />
       </form>
     );
-  }  
-};
+  }
+}
 
 export default NewTaskForm;

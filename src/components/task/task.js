@@ -1,5 +1,6 @@
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
+import PropTypes from "prop-types";
 
 import "./task.css";
 
@@ -36,15 +37,16 @@ class Task extends React.Component {
     },
     editTaskHandler: () => {
       throw new Error("editTaskHandler property is undefined! Check it!");
-    },
-    itemProps: {
-      id: -1,
-      status: "",
-      description: "Error in task.js, itemProps - undefined",
-      created: new Date(Date.now()),
-      statusBeforeEditing: "",
-    },
+    },    
   };
+  
+  static propTypes = {
+    onCloseBtnClicked: PropTypes.func,
+    onEditFinished: PropTypes.func,
+    onTaskClicked: PropTypes.func,
+    editTaskHandler: PropTypes.func,
+    itemProps: PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props);

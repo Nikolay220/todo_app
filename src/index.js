@@ -6,4 +6,4 @@ import './index.css';
 
 const rootContainer = document.getElementById('root');
 const root = ReactDOMClient.createRoot(rootContainer);
-root.render(<App />);
+root.render(<App />)

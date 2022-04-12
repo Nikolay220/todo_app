@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import "./tasks-filter.css";
+import './tasks-filter.css';
 
-const TasksFilter = ({ filterProps, filterBtnHandler }) => {
-  if (filterProps.selected)
+function TasksFilter({ filterProps, filterBtnHandler }) {
+  if (filterProps.selected) {
     return (
       <button
         onClick={() => {
@@ -15,21 +15,21 @@ const TasksFilter = ({ filterProps, filterBtnHandler }) => {
         {filterProps.content}
       </button>
     );
-  else
-    return (
-      <button
-        onClick={() => {
-          filterBtnHandler(filterProps.id);
-        }}
-      >
-        {filterProps.content}
-      </button>
-    );
-};
+  }
+  return (
+    <button
+      onClick={() => {
+        filterBtnHandler(filterProps.id);
+      }}
+    >
+      {filterProps.content}
+    </button>
+  );
+}
 
 TasksFilter.defaultProps = {
   filterBtnHandler: () => {
-    throw new Error("filterBtnHandler property is undefined! Check it!");
+    throw new Error('filterBtnHandler property is undefined! Check it!');
   },
 };
 

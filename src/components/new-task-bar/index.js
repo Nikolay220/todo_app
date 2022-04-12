@@ -1,2 +1,3 @@
-import NewTaskBar from "./new-task-bar";
+import NewTaskBar from './new-task-bar';
+
 export default NewTaskBar;

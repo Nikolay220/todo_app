@@ -1,0 +1,4 @@
+# папки, которые eslinter не должен просматривать
+node_modules
+/.vscode
+/.git

@@ -1,0 +1,13 @@
+{
+    "env":{
+        "browser":true,
+        "es6":true,
+        "node":true
+    },
+    "extends":["airbnb"],
+    "rules":{
+        // "semi":"off",
+        "eol-last":"off",
+        "indent":[2,"tab"]      
+    }
+}

@@ -1,17 +1,17 @@
-import React from "react";
-import TasksFilter from "../tasks-filter";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
+import TasksFilter from '../tasks-filter';
 
-import "./footer.css";
+import './footer.css';
 
-const Footer = ({
+function Footer({
   clearCompletedTasksHandler,
   filterListItems,
   filterBtnHandler,
   activeItems,
-}) => {
+}) {
   const filters = filterListItems.map((filter) => {
-    let { ...filterProps } = { ...filter };
+    const { ...filterProps } = { ...filter };
     return (
       <li key={filterProps.id}>
         <TasksFilter
@@ -23,14 +23,18 @@ const Footer = ({
   });
   return (
     <footer className="footer">
-      <span className="todo-count">{activeItems} items left</span>
+      <span className="todo-count">
+        {activeItems}
+        {' '}
+        items left
+      </span>
       <ul className="filters">{filters}</ul>
       <button onClick={clearCompletedTasksHandler} className="clear-completed">
         Clear completed
       </button>
     </footer>
   );
-};
+}
 
 Footer.defaultProps = {
   // не стал добавлять нефункциональным элементам
@@ -39,11 +43,11 @@ Footer.defaultProps = {
   // что нет этого свойства и объяснит причину в Warningе.
   clearCompletedTasksHandler: () => {
     throw new Error(
-      "clearCompletedTasksHandler property is undefined! Check it!"
+      'clearCompletedTasksHandler property is undefined! Check it!',
     );
   },
   filterBtnHandler: () => {
-    throw new Error("filterBtnHandler property is undefined! Check it!");
+    throw new Error('filterBtnHandler property is undefined! Check it!');
   },
 };
 Footer.propTypes = {

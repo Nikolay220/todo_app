@@ -1,1 +1,1 @@
-[Cсылка на развёрнутое приложение](https://vercel.com/nikolayshutikov-gmailcom/todo-app).
+[Cсылка на развёрнутое приложение](https://todo-app-alpha-ashen.vercel.app/).

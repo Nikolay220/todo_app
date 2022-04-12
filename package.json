@@ -19,7 +19,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix --color"
+    "lint:fix": "eslint ./src --fix --color",
+    "format": "prettier --write src/**/*.js",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -40,25 +42,23 @@
     ]
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
     "prettier": "^2.6.2"
-  },	
-  "husky":{
-    "hooks":{
-      "pre-commit":"lint-staged"
-    }	
   },
-	"lint-staged":{
-		"*.js":[
-			"npm run lint:fix",
-			"git add"
-		]
-	}
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:fix",
+      "npm run format"
+    ]
+  }
 }

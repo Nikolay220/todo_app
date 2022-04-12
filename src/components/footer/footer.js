@@ -1,39 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import TasksFilter from '../tasks-filter';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import './footer.css';
+import TasksFilter from '../tasks-filter'
 
-function Footer({
-  clearCompletedTasksHandler,
-  filterListItems,
-  filterBtnHandler,
-  activeItems,
-}) {
+import './footer.css'
+
+function Footer({ clearCompletedTasksHandler, filterListItems, filterBtnHandler, activeItems }) {
   const filters = filterListItems.map((filter) => {
-    const { ...filterProps } = { ...filter };
+    const { ...filterProps } = { ...filter }
     return (
       <li key={filterProps.id}>
-        <TasksFilter
-          filterBtnHandler={filterBtnHandler}
-          filterProps={filterProps}
-        />
+        <TasksFilter filterBtnHandler={filterBtnHandler} filterProps={filterProps} />
       </li>
-    );
-  });
+    )
+  })
   return (
     <footer className="footer">
-      <span className="todo-count">
-        {activeItems}
-        {' '}
-        items left
-      </span>
+      <span className="todo-count">{activeItems} items left</span>
       <ul className="filters">{filters}</ul>
       <button onClick={clearCompletedTasksHandler} className="clear-completed">
         Clear completed
       </button>
     </footer>
-  );
+  )
 }
 
 Footer.defaultProps = {
@@ -42,18 +31,16 @@ Footer.defaultProps = {
   // в месте причины не формируется), зато propTypes увидит,
   // что нет этого свойства и объяснит причину в Warningе.
   clearCompletedTasksHandler: () => {
-    throw new Error(
-      'clearCompletedTasksHandler property is undefined! Check it!',
-    );
+    throw new Error('clearCompletedTasksHandler property is undefined! Check it!')
   },
   filterBtnHandler: () => {
-    throw new Error('filterBtnHandler property is undefined! Check it!');
+    throw new Error('filterBtnHandler property is undefined! Check it!')
   },
-};
+}
 Footer.propTypes = {
   clearCompletedTasksHandler: PropTypes.func,
   filterListItems: PropTypes.array.isRequired,
   filterBtnHandler: PropTypes.func,
   activeItems: PropTypes.number.isRequired,
-};
-export default Footer;
+}
+export default Footer

@@ -1,28 +1,22 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import "./new-task-bar.css";
+import './new-task-bar.css'
 
 class NewTaskBar extends React.Component {
-  static defaultProps = {
-    onFormSubmit: () => {
-      throw new Error("onFormSubmit property is undefined! Check it!");
-    },
-  };
+  constructor(props) {
+    super(props)
+    this.state = { curVal: '' }
+    this.inputChangeHandler = (evt) => {
+      this.setState({ curVal: evt.target.value })
+    }
+    this.onSubmit = (evt) => {
+      evt.preventDefault()
+      this.props.onFormSubmit(this.state.curVal)
+      this.setState({ curVal: '' })
+    }
+  }
 
-  static propTypes = {
-    onFormSubmit: PropTypes.func,
-  };
-
-  state = { curVal: "" };
-  inputChangeHandler = (evt) => {
-    this.setState({ curVal: evt.target.value });
-  };
-  onSubmit = (evt) => {
-    evt.preventDefault();
-    this.props.onFormSubmit(this.state.curVal);
-    this.setState({ curVal: "" });
-  };
   render() {
     return (
       <form onSubmit={this.onSubmit}>
@@ -34,8 +28,17 @@ class NewTaskBar extends React.Component {
           autoFocus
         />
       </form>
-    );
+    )
   }
 }
 
-export default NewTaskBar;
+NewTaskBar.defaultProps = {
+  onFormSubmit: () => {
+    throw new Error('onFormSubmit property is undefined! Check it!')
+  },
+}
+
+NewTaskBar.propTypes = {
+  onFormSubmit: PropTypes.func,
+}
+export default NewTaskBar

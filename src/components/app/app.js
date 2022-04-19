@@ -87,17 +87,20 @@ class App extends React.Component {
     }
 
     this.addTaskHandler = (text) => {
-      console.log(text)
-      // let newItem = createNewListItem(taskId++, text, '')
-      // allTasks.push(newItem)
-      // let choosedFilterContent = this.getChoosedFilterContent()
-      // if (choosedFilterContent === 'Completed') {
-      //   this.chooseOtherFilter('All')
-      //   choosedFilterContent = 'All'
-      // }
-      // this.setState({
-      //   todoListItems: this.filterList(choosedFilterContent),
-      // })
+      // console.log(text)
+      if (text.trim()) {
+        let newItem = createNewListItem(taskId++, text, '')
+        allTasks.push(newItem)
+        let choosedFilterContent = this.state.curFilter
+        if (choosedFilterContent === 'Completed') {
+          // this.chooseOtherFilter('All') //choose other filter by program
+          choosedFilterContent = 'All'
+        }
+        this.setState({
+          todoListItems: this.filterList(choosedFilterContent),
+          curFilter: choosedFilterContent,
+        })
+      }
     }
 
     this.editTaskHandler = (taskId) => {
@@ -108,10 +111,12 @@ class App extends React.Component {
     }
 
     this.onTaskEditFinished = (taskId, newText) => {
-      let index = getObjsArrayIndexById(allTasks, taskId)
-      allTasks[index].status = allTasks[index].statusBeforeEditing
-      allTasks[index].description = newText
-      this.setState({ todoListItems: allTasks })
+      if (newText.trim()) {
+        let index = getObjsArrayIndexById(allTasks, taskId)
+        allTasks[index].status = allTasks[index].statusBeforeEditing
+        allTasks[index].description = newText
+        this.setState({ todoListItems: allTasks })
+      }
     }
   }
 
@@ -152,7 +157,7 @@ class App extends React.Component {
   // }
 
   updateTasks() {
-    let filterContent = this.getChoosedFilterContent()
+    let filterContent = this.state.curFilter
     this.setState({ todoListItems: this.filterList(filterContent) })
   }
 

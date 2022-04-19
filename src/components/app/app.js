@@ -20,11 +20,11 @@ let allTasks = [
   createNewListItem(taskId++, 'Active task', ''),
 ]
 
-let filters = [
-  { id: 'q1', selected: true, content: 'All' },
-  { id: 'q2', selected: false, content: 'Active' },
-  { id: 'q3', selected: false, content: 'Completed' },
-]
+// let filters = [
+//   { id: 'q1', selected: true, content: 'All' },
+//   { id: 'q2', selected: false, content: 'Active' },
+//   { id: 'q3', selected: false, content: 'Completed' },
+// ]
 
 function createNewListItem(id, description, status, statusBeforeEditing = '') {
   return {
@@ -55,7 +55,7 @@ class App extends React.Component {
     super(props)
     this.state = {
       todoListItems: [...allTasks],
-      filterListItems: [...filters],
+      curFilter: 'All',
     }
     // Callback functions  на основе не предыдущего state, а переменной,
     // содержащей массив из state.
@@ -66,11 +66,10 @@ class App extends React.Component {
       this.updateTasks()
     }
 
-    this.filterBtnHandler = (id) => {
+    this.filterBtnHandler = (choosedFilter) => {
       let tasks
-      let filterIndex = this.chooseOtherFilterById(id)
-      tasks = this.filterList(filters[filterIndex].content)
-      this.setState({ filterListItems: filters, todoListItems: tasks })
+      tasks = this.filterList(choosedFilter)
+      this.setState({ curFilter: choosedFilter, todoListItems: tasks })
     }
 
     this.closeBtnHandler = (id) => {
@@ -88,16 +87,17 @@ class App extends React.Component {
     }
 
     this.addTaskHandler = (text) => {
-      let newItem = createNewListItem(taskId++, text, '')
-      allTasks.push(newItem)
-      let choosedFilterContent = this.getChoosedFilterContent()
-      if (choosedFilterContent === 'Completed') {
-        this.chooseOtherFilter('All')
-        choosedFilterContent = 'All'
-      }
-      this.setState({
-        todoListItems: this.filterList(choosedFilterContent),
-      })
+      console.log(text)
+      // let newItem = createNewListItem(taskId++, text, '')
+      // allTasks.push(newItem)
+      // let choosedFilterContent = this.getChoosedFilterContent()
+      // if (choosedFilterContent === 'Completed') {
+      //   this.chooseOtherFilter('All')
+      //   choosedFilterContent = 'All'
+      // }
+      // this.setState({
+      //   todoListItems: this.filterList(choosedFilterContent),
+      // })
     }
 
     this.editTaskHandler = (taskId) => {
@@ -132,24 +132,24 @@ class App extends React.Component {
     return this.state.filterListItems[choosedFilterIndex].content
   }
 
-  chooseOtherFilter(content) {
-    for (let val of filters) {
-      if (val.selected === true) val.selected = false
-      if (val.content === content) val.selected = true
-    }
-  }
+  // chooseOtherFilter(content) {
+  //   for (let val of filters) {
+  //     if (val.selected === true) val.selected = false
+  //     if (val.content === content) val.selected = true
+  //   }
+  // }
 
-  chooseOtherFilterById(id) {
-    let filterIndex = -1
-    filters.forEach((value, index) => {
-      if (value.selected === true) value.selected = false
-      if (value.id === id) {
-        value.selected = true
-        filterIndex = index
-      }
-    })
-    return filterIndex
-  }
+  // chooseOtherFilterById(id) {
+  //   let filterIndex = -1
+  //   filters.forEach((value, index) => {
+  //     if (value.selected === true) value.selected = false
+  //     if (value.id === id) {
+  //       value.selected = true
+  //       filterIndex = index
+  //     }
+  //   })
+  //   return filterIndex
+  // }
 
   updateTasks() {
     let filterContent = this.getChoosedFilterContent()
@@ -187,7 +187,7 @@ class App extends React.Component {
             activeItems={getNumOfActiveTasks(allTasks)}
             clearCompletedTasksHandler={this.clearCompletedTasksHandler}
             filterBtnHandler={this.filterBtnHandler}
-            filterListItems={this.state.filterListItems}
+            curFilter={this.state.curFilter}
           />
         </section>
       </section>

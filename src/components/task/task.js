@@ -2,7 +2,7 @@ import React from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import PropTypes from 'prop-types'
 
-import './task.css'
+import './task.scss'
 
 function reformatCreationTime(time) {
   if (time.includes('seconds')) return 'created ' + time.split(' ')[2] + ' seconds ago'

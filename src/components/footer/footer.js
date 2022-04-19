@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import TasksFilters from '../tasks-filters'
 
-import './footer.css'
+import './footer.scss'
 
 function Footer({ clearCompletedTasksHandler, curFilter, filterBtnHandler, activeItems }) {
   return (

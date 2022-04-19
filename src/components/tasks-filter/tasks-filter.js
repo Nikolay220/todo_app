@@ -1,20 +1,11 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
-import './tasks-filter.css'
+import './tasks-filter.scss'
 
 function TasksFilter({ filterContent, selected, filterBtnHandler }) {
   if (selected) {
-    return (
-      <button
-        // onClick={() => {
-        //   filterBtnHandler(filterContent)
-        // }}
-        className="selected"
-      >
-        {filterContent}
-      </button>
-    )
+    return <button className="selected">{filterContent}</button>
   }
   return (
     <button
@@ -33,9 +24,10 @@ TasksFilter.defaultProps = {
   },
 }
 
-// TasksFilter.propTypes = {
-//   filterBtnHandler: PropTypes.func,
-//   filterProps: PropTypes.object.isRequired,
-// }
+TasksFilter.propTypes = {
+  filterBtnHandler: PropTypes.func,
+  filterContent: PropTypes.string.isRequired,
+  selected: PropTypes.bool.isRequired,
+}
 
 export default TasksFilter

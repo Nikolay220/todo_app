@@ -3,33 +3,49 @@ import PropTypes from 'prop-types'
 
 import Task from '../task'
 
-import './task-list.css'
-
-function TaskList({ onEditFinished, editTaskHandler, todoListItems, onTaskClicked, onCloseBtnClicked } = {}) {
+import './task-list.scss'
+function taskIsDisplayed(taskContent, curFilter) {
+  if (curFilter === 'All') return true
+  else if (curFilter === 'Active' && taskContent.statusBeforeEditing === '') return true
+  else if (curFilter === 'Completed' && taskContent.statusBeforeEditing === 'completed') return true
+  return false
+}
+function TaskList({
+  onEditFinished,
+  editTaskHandler,
+  todoListItems,
+  onTaskClicked,
+  onCloseBtnClicked,
+  curFilter,
+} = {}) {
   const completedItems = todoListItems.map((item) => {
     let listItem
     if (item.status) {
       listItem = (
         <li className={item.status} key={item.id}>
-          <Task
-            editTaskHandler={editTaskHandler}
-            onCloseBtnClicked={onCloseBtnClicked}
-            onTaskClicked={onTaskClicked}
-            onEditFinished={onEditFinished}
-            itemProps={item}
-          />
+          {taskIsDisplayed(item, curFilter) && (
+            <Task
+              editTaskHandler={editTaskHandler}
+              onCloseBtnClicked={onCloseBtnClicked}
+              onTaskClicked={onTaskClicked}
+              onEditFinished={onEditFinished}
+              itemProps={item}
+            />
+          )}
         </li>
       )
     } else {
       listItem = (
         <li key={item.id}>
-          <Task
-            editTaskHandler={editTaskHandler}
-            onCloseBtnClicked={onCloseBtnClicked}
-            onTaskClicked={onTaskClicked}
-            onEditFinished={onEditFinished}
-            itemProps={item}
-          />
+          {taskIsDisplayed(item, curFilter) && (
+            <Task
+              editTaskHandler={editTaskHandler}
+              onCloseBtnClicked={onCloseBtnClicked}
+              onTaskClicked={onTaskClicked}
+              onEditFinished={onEditFinished}
+              itemProps={item}
+            />
+          )}
         </li>
       )
     }
@@ -59,5 +75,6 @@ TaskList.propTypes = {
   onTaskClicked: PropTypes.func,
   editTaskHandler: PropTypes.func,
   todoListItems: PropTypes.array.isRequired,
+  curFilter: PropTypes.string.isRequired,
 }
 export default TaskList

@@ -18,11 +18,12 @@ button {
 	appearance: none;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	&::-moz-focus-inner {
+		border: none;
+	}
 }
 
-button::-moz-focus-inner {
-	border: none;
-}
+
 
 body {
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -53,29 +54,33 @@ body {
 	position: absolute;
 	right: 100%;
 	bottom: 100%;
+	& + label {
+		width: 60px;
+		height: 34px;
+		font-size: 0;
+		position: absolute;
+		top: -52px;
+		left: -13px;
+		-webkit-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+	& + label{
+		&:before {
+			content: '❯';
+			font-size: 22px;
+			color: #e6e6e6;
+			padding: 10px 27px 10px 27px;
+		}
+	}
+	&::checked 
+	{
+		& + label:before {
+			color: #737373;
+		}
+	}
+	
 }
 
-.toggle-all + label {
-	width: 60px;
-	height: 34px;
-	font-size: 0;
-	position: absolute;
-	top: -52px;
-	left: -13px;
-	-webkit-transform: rotate(90deg);
-	transform: rotate(90deg);
-}
-
-.toggle-all + label:before {
-	content: '❯';
-	font-size: 22px;
-	color: #e6e6e6;
-	padding: 10px 27px 10px 27px;
-}
-
-.toggle-all:checked + label:before {
-	color: #737373;
-}
 
 
 .info {
@@ -84,18 +89,15 @@ body {
 	font-size: 11px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	text-align: center;
-}
-
-.info p {
-	line-height: 1;
-}
-
-.info a {
-	color: inherit;
-	text-decoration: none;
-	font-weight: 400;
-}
-
-.info a:hover {
-	text-decoration: underline;
+	p {
+		line-height: 1;
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 400;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
 }

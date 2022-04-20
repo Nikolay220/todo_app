@@ -56,6 +56,7 @@ class Task extends React.Component {
         </div>
         {status === 'editing' && (
           <input
+            autoFocus
             type="text"
             className="edit"
             value={this.state.value}

@@ -1,14 +1,14 @@
 .filters {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	right: 0;
-	left: 0;
-    li{
-        display: inline;
-        cursor: default;
-    }
-    @media screen and (max-width:430px){
-        bottom: 10px;        
-    }
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  right: 0;
+  left: 0;
+  li {
+    display: inline;
+    cursor: default;
+  }
+  @media screen and (max-width: 430px) {
+    bottom: 10px;
+  }
 }

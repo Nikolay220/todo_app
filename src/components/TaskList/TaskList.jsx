@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Task from '../task'
+import Task from '../Task'
 
-import './task-list.scss'
+import './TaskList.scss'
 function taskIsDisplayed(taskContent, curFilter) {
   if (curFilter === 'All') return true
   else if (curFilter === 'Active' && taskContent.statusBeforeEditing === '') return true

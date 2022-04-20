@@ -1,26 +1,26 @@
 import React from 'react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceStrict } from 'date-fns'
 import PropTypes from 'prop-types'
 
-import './task.scss'
+import './Task.scss'
 
-function reformatCreationTime(time) {
-  if (time.includes('seconds')) return 'created ' + time.split(' ')[2] + ' seconds ago'
-  else if (time.includes('half')) {
-    return 'created 30 seconds ago'
-  } else if (time.includes('less') && time.includes('minute')) {
-    return 'created 50 seconds ago'
-  } else if (time.includes('minutes')) {
-    return 'created ' + time.split(' ')[0] + ' minutes ago'
-  } else if (time.includes('minute')) {
-    return 'created 1 minute ago'
-  } else if (time.includes('hours')) {
-    return 'created ' + time.split(' ')[1] + ' hours ago'
-  } else if (time.includes('hour')) {
-    return 'created 1 hour ago'
-  }
-  return time
-}
+// function reformatCreationTime(time) {
+//   if (time.includes('seconds')) return 'created ' + time.split(' ')[2] + ' seconds ago'
+//   else if (time.includes('half')) {
+//     return 'created 30 seconds ago'
+//   } else if (time.includes('less') && time.includes('minute')) {
+//     return 'created 50 seconds ago'
+//   } else if (time.includes('minutes')) {
+//     return 'created ' + time.split(' ')[0] + ' minutes ago'
+//   } else if (time.includes('minute')) {
+//     return 'created 1 minute ago'
+//   } else if (time.includes('hours')) {
+//     return 'created ' + time.split(' ')[1] + ' hours ago'
+//   } else if (time.includes('hour')) {
+//     return 'created 1 hour ago'
+//   }
+//   return time
+// }
 
 class Task extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class Task extends React.Component {
     this.setState({ value: event.target.value })
   }
   render() {
-    const { id, status, description, created } = this.props.itemProps
+    const { id, status, description, created, updatedAt } = this.props.itemProps
     const { onEditFinished, onTaskClicked, onCloseBtnClicked, editTaskHandler } = this.props
     return (
       <div>
@@ -47,9 +47,7 @@ class Task extends React.Component {
           />
           <label onClick={() => onTaskClicked(id)}>
             <span className="description">{description}</span>
-            <span className="created">
-              {reformatCreationTime(formatDistanceToNow(created, { includeSeconds: true }))}
-            </span>
+            <span className="created">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
           </label>
           <button onClick={() => editTaskHandler(id)} className="icon icon-edit"></button>
           <button onClick={onCloseBtnClicked.bind(this, id)} className="icon icon-destroy"></button>

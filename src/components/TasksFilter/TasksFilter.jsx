@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './tasks-filter.scss'
+import './TasksFilter.scss'
 
 function TasksFilter({ filterContent, selected, filterBtnHandler }) {
   if (selected) {

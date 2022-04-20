@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import TasksFilter from '../tasks-filter'
-import './tasks-filters.scss'
+import TasksFilter from '../TasksFilter'
+import './TasksFilters.scss'
 
 let numOfFilters = 3
 let filtersContents = ['All', 'Active', 'Completed']

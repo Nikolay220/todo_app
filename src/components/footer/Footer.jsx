@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import TasksFilters from '../tasks-filters'
+import TasksFilters from '../TasksFilters'
 
-import './footer.scss'
+import './Footer.scss'
 
 function Footer({ clearCompletedTasksHandler, curFilter, filterBtnHandler, activeItems }) {
   return (

@@ -1,10 +1,10 @@
 import React from 'react'
 
-import Footer from '../footer/footer'
-import TaskList from '../task-list'
-import NewTaskBar from '../new-task-bar'
+import Footer from '../Footer'
+import TaskList from '../TaskList'
+import NewTaskBar from '../NewTaskBar'
 
-import './app.scss'
+import './App.scss'
 
 let taskId = 1
 
@@ -12,9 +12,10 @@ function createNewListItem(id, description, status, statusBeforeEditing = '') {
   return {
     id,
     status,
+    statusBeforeEditing,
     description,
     created: new Date(Date.now()),
-    statusBeforeEditing,
+    updatedAt: new Date(Date.now()),
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -63,6 +64,9 @@ class App extends React.Component {
         let newArr = state.todoListItems.filter((value) => {
           return value.id !== id
         })
+        newArr.forEach((value) => {
+          value.updatedAt = new Date(Date.now())
+        })
         return { todoListItems: newArr }
       })
     }
@@ -71,6 +75,9 @@ class App extends React.Component {
       this.setState((state) => {
         let newArr = state.todoListItems.filter((value) => {
           return value.status !== 'completed'
+        })
+        newArr.forEach((value) => {
+          value.updatedAt = new Date(Date.now())
         })
         return { todoListItems: newArr }
       })
@@ -84,6 +91,9 @@ class App extends React.Component {
           newArr.push(newItem)
           let choosedFilterContent = this.state.curFilter
           if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
+          newArr.forEach((value) => {
+            value.updatedAt = new Date(Date.now())
+          })
           return {
             todoListItems: newArr,
             curFilter: choosedFilterContent,
@@ -96,7 +106,6 @@ class App extends React.Component {
       this.setState((state) => {
         let newArr = [...state.todoListItems]
         let index = getIndexById(newArr, taskId)
-
         newArr[index].statusBeforeEditing = newArr[index].status
         newArr[index].status = 'editing'
         return { todoListItems: newArr }
@@ -110,6 +119,9 @@ class App extends React.Component {
           let newArr = [...state.todoListItems]
           newArr[index].status = newArr[index].statusBeforeEditing
           newArr[index].description = newText
+          newArr.forEach((value) => {
+            value.updatedAt = new Date(Date.now())
+          })
           return { todoListItems: newArr }
         })
       }

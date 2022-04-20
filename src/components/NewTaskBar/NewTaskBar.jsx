@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './new-task-bar.scss'
+import './NewTaskBar.scss'
 
 class NewTaskBar extends React.Component {
   constructor(props) {

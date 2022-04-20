@@ -1,0 +1,8 @@
+.eslintrc
+.prettierrc
+.vercel/project.json
+package-lock.json
+package.json
+*.html
+*.scss
+README.md

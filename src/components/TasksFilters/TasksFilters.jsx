@@ -31,6 +31,7 @@ TasksFilters.defaultProps = {
     throw new Error('filterBtnHandler property is undefined! Check it!')
   },
 }
+// asd
 TasksFilters.propTypes = {
   filterBtnHandler: PropTypes.func,
   curFilter: PropTypes.string.isRequired,

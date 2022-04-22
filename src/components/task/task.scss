@@ -67,12 +67,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 15px 85px 15px 60px;
-      .created {
+      .description {
         font-size: 13px;
         color: gray;
       }
 
-      .description {
+      .title {
         word-break: break-all;
         display: block;
         line-height: 1.2;
@@ -83,21 +83,18 @@
     }
     &.completed {
       label {
-        .description {
+        .title {
           color: #cdcdcd;
           text-decoration: line-through;
         }
       }
     }
     .icon {
-      position: absolute;
-      top: 0;
-      bottom: -3px;
       width: 30px;
       height: 40px;
       font-size: 34px;
       color: #cc9a9a;
-      margin: auto 0 11px;
+      margin: auto 0;
       transition: color 0.2s ease-out;
       cursor: pointer;
       &:hover {
@@ -105,20 +102,45 @@
       }
     }
     .icon-destroy {
+      position: absolute;
+      top: 0;
+      bottom: -3px;
       right: 10px;
       &:after {
         content: '×';
       }
     }
     .icon-edit {
+      position: absolute;
+      top: 0;
+      bottom: -3px;
       font-size: 19px;
       right: 45px;
       &:after {
         content: '✎';
       }
     }
+    .icon-pause {
+      font-size: 18px;
+      width: 26px;
+      height: 18px;
+      &:after {
+        content: '⏸';
+      }
+    }
+    .icon-play {
+      font-size: 15px;
+      width: 18px;
+      height: 18px;
+      &:after {
+        content: '▶';
+      }
+    }
     .edit {
       display: none;
+    }
+    .view {
+      position: relative;
     }
   }
 }

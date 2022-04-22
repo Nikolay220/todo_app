@@ -13,7 +13,7 @@
     "test": "react-scripts test"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx,html}": [
       "npm run lint:fix",
       "npm run format"
     ]

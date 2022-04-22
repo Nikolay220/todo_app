@@ -8,7 +8,7 @@ import './App.scss'
 
 let taskId = 1
 
-function createNewListItem(id, description, status, statusBeforeEditing = '') {
+function createNewListItem(id, description, status, statusBeforeEditing = '', minutes = 12, seconds = 25) {
   return {
     id,
     status,
@@ -16,6 +16,8 @@ function createNewListItem(id, description, status, statusBeforeEditing = '') {
     description,
     created: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
+    minutes,
+    seconds,
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -83,9 +85,18 @@ class App extends React.Component {
       })
     }
 
-    this.addTaskHandler = (text) => {
-      if (text.trim()) {
-        let newItem = createNewListItem(taskId++, text, '')
+    this.addTaskHandler = (taskObj) => {
+      if (taskObj.task.trim()) {
+        let mins = Number(taskObj.minutes)
+        let secs = Number(taskObj.seconds)
+        let newItem = createNewListItem(
+          taskId++,
+          taskObj.task,
+          '',
+          '',
+          Number.isNaN(mins) ? undefined : mins,
+          Number.isNaN(secs) ? undefined : secs
+        )
         this.setState((state) => {
           let newArr = [...state.todoListItems]
           newArr.push(newItem)

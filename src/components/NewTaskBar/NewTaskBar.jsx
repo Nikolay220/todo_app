@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import './NewTaskBar.scss'
 
+// let filledInputsNum = 0
+
 class NewTaskBar extends React.Component {
   constructor(props) {
     super(props)
@@ -12,18 +14,18 @@ class NewTaskBar extends React.Component {
     }
     this.onSubmit = (evt) => {
       if (evt.key === 'Enter') {
-        this.props.onAddTask(this.state.task)
+        this.props.onAddTask(this.state)
         this.setState({ task: '', minutes: '', seconds: '' })
       }
     }
     this.onTimeChange = (evt) => {
-      if (evt.key === 'Enter' && !evt.target.disabled && evt.target.value) {
-        evt.target.disabled = true
-      }
-    }
-    this.onTimeClick = (evt) => {
-      if (evt.target.disabled) {
-        evt.target.disabled = false
+      if (evt.key === 'Enter') {
+        if (
+          !Array.from(document.querySelector('.new-todo-form').children).find(
+            (curValue) => curValue.value.trim() === ''
+          )
+        )
+          this.onSubmit(evt)
       }
     }
   }
@@ -44,7 +46,6 @@ class NewTaskBar extends React.Component {
           value={this.state.minutes}
           onChange={this.inputChangeHandler.bind(this, 'minutes')}
           onKeyDown={this.onTimeChange}
-          onClick={this.onTimeClick}
           autoFocus
         />
         <input
@@ -53,7 +54,6 @@ class NewTaskBar extends React.Component {
           value={this.state.seconds}
           onChange={this.inputChangeHandler.bind(this, 'seconds')}
           onKeyDown={this.onTimeChange}
-          onClick={this.onTimeClick}
           autoFocus
         />
       </form>

@@ -27,10 +27,6 @@ export default function TasksFilters({ curFilter, filterBtnHandler }) {
 }
 
 TasksFilters.defaultProps = {
-  // не стал добавлять нефункциональным элементам
-  // дефолтные значения, потому что это ненаглядно (ошибка
-  // в месте причины не формируется), зато propTypes увидит,
-  // что нет этого свойства и объяснит причину в Warningе.
   filterBtnHandler: () => {
     throw new Error('filterBtnHandler property is undefined! Check it!')
   },

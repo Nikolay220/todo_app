@@ -4,24 +4,6 @@ import PropTypes from 'prop-types'
 
 import './Task.scss'
 
-// function reformatCreationTime(time) {
-//   if (time.includes('seconds')) return 'created ' + time.split(' ')[2] + ' seconds ago'
-//   else if (time.includes('half')) {
-//     return 'created 30 seconds ago'
-//   } else if (time.includes('less') && time.includes('minute')) {
-//     return 'created 50 seconds ago'
-//   } else if (time.includes('minutes')) {
-//     return 'created ' + time.split(' ')[0] + ' minutes ago'
-//   } else if (time.includes('minute')) {
-//     return 'created 1 minute ago'
-//   } else if (time.includes('hours')) {
-//     return 'created ' + time.split(' ')[1] + ' hours ago'
-//   } else if (time.includes('hour')) {
-//     return 'created 1 hour ago'
-//   }
-//   return time
-// }
-
 class Task extends React.Component {
   constructor(props) {
     super(props)

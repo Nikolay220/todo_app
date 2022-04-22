@@ -46,8 +46,13 @@ class Task extends React.Component {
             checked={status === 'completed' ? true : false}
           />
           <label onClick={() => onTaskClicked(id)}>
-            <span className="description">{description}</span>
-            <span className="created">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
+            <span className="title">{description}</span>
+            <span className="description">
+              <button className="icon icon-play"></button>
+              <button className="icon icon-pause"></button>
+              12:25
+            </span>
+            <span className="description">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
           </label>
           <button onClick={() => editTaskHandler(id)} className="icon icon-edit"></button>
           <button onClick={onCloseBtnClicked.bind(this, id)} className="icon icon-destroy"></button>

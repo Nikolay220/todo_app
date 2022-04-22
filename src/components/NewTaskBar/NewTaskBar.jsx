@@ -6,25 +6,54 @@ import './NewTaskBar.scss'
 class NewTaskBar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { curVal: '' }
-    this.inputChangeHandler = (evt) => {
-      this.setState({ curVal: evt.target.value })
+    this.state = { task: '', minutes: '', seconds: '' }
+    this.inputChangeHandler = (changedState, evt) => {
+      this.setState({ [changedState]: evt.target.value })
     }
     this.onSubmit = (evt) => {
-      evt.preventDefault()
-      this.props.onFormSubmit(this.state.curVal)
-      this.setState({ curVal: '' })
+      if (evt.key === 'Enter') {
+        this.props.onAddTask(this.state.task)
+        this.setState({ task: '', minutes: '', seconds: '' })
+      }
+    }
+    this.onTimeChange = (evt) => {
+      if (evt.key === 'Enter' && !evt.target.disabled && evt.target.value) {
+        evt.target.disabled = true
+      }
+    }
+    this.onTimeClick = (evt) => {
+      if (evt.target.disabled) {
+        evt.target.disabled = false
+      }
     }
   }
-
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
+      <form className="new-todo-form">
         <input
           className="new-todo"
-          placeholder="What needs to be done?"
-          value={this.state.curVal}
-          onChange={this.inputChangeHandler}
+          placeholder="Task"
+          value={this.state.task}
+          onChange={this.inputChangeHandler.bind(this, 'task')}
+          onKeyDown={this.onSubmit}
+          autoFocus
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Min"
+          value={this.state.minutes}
+          onChange={this.inputChangeHandler.bind(this, 'minutes')}
+          onKeyDown={this.onTimeChange}
+          onClick={this.onTimeClick}
+          autoFocus
+        />
+        <input
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          value={this.state.seconds}
+          onChange={this.inputChangeHandler.bind(this, 'seconds')}
+          onKeyDown={this.onTimeChange}
+          onClick={this.onTimeClick}
           autoFocus
         />
       </form>
@@ -33,12 +62,12 @@ class NewTaskBar extends React.Component {
 }
 
 NewTaskBar.defaultProps = {
-  onFormSubmit: () => {
-    throw new Error('onFormSubmit property is undefined! Check it!')
+  onAddTask: () => {
+    throw new Error('onAddTask property is undefined! Check it!')
   },
 }
 
 NewTaskBar.propTypes = {
-  onFormSubmit: PropTypes.func,
+  onAddTask: PropTypes.func,
 }
 export default NewTaskBar

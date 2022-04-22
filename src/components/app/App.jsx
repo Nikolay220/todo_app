@@ -38,9 +38,9 @@ class App extends React.Component {
     super(props)
     this.state = {
       todoListItems: [
-        createNewListItem(taskId++, 'Completed task', 'completed', 'completed'),
-        createNewListItem(taskId++, 'Editing task', 'editing'),
-        createNewListItem(taskId++, 'Active task', ''),
+        createNewListItem(taskId++, 'completed', 'completed', 'completed'),
+        createNewListItem(taskId++, 'edit', 'editing'),
+        createNewListItem(taskId++, 'active', ''),
       ],
       curFilter: 'All',
     }
@@ -133,7 +133,7 @@ class App extends React.Component {
       <section className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <NewTaskBar onFormSubmit={this.addTaskHandler} />
+          <NewTaskBar onAddTask={this.addTaskHandler} />
         </header>
         <section className="main">
           <TaskList

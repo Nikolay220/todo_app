@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 
 import './NewTaskBar.scss'
 
-// let filledInputsNum = 0
-
 class NewTaskBar extends React.Component {
   constructor(props) {
     super(props)

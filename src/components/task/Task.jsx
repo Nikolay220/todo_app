@@ -11,9 +11,38 @@ class Task extends React.Component {
       value: props.itemProps.description,
     }
     this.onEditChangeHandler = this.onEditChangeHandler.bind(this)
+    this.intervals = {}
+
+    this.onTimerPlay = (id) => {
+      if (!this.props.itemProps.timeIsOver && !this.intervals[id])
+        this.intervals[id] = setInterval(() => {
+          this.props.onTimerIteration(id)
+        }, 1000)
+    }
+
+    this.onTimerPause = (id) => {
+      if (this.intervals[id]) {
+        clearInterval(this.intervals[id])
+        delete this.intervals[id]
+      }
+    }
   }
+
   onEditChangeHandler(event) {
     this.setState({ value: event.target.value })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.itemProps.timeIsOver !== this.props.itemProps.timeIsOver) {
+      clearInterval(this.intervals[this.props.itemProps.id])
+      delete this.intervals[this.props.itemProps.id]
+    }
+  }
+
+  componentWillUnmount() {
+    Object.entries(this.intervals).forEach((value) => {
+      clearInterval(value[1])
+    })
   }
   render() {
     const { id, status, description, created, updatedAt, minutes, seconds } = this.props.itemProps
@@ -32,9 +61,19 @@ class Task extends React.Component {
               {description}
             </span>
             <span className="description">
-              <button className="icon icon-play"></button>
-              <button className="icon icon-pause"></button>
-              {`${minutes}:${seconds}`}
+              <button
+                className="icon icon-play"
+                onClick={() => {
+                  this.onTimerPlay(id)
+                }}
+              ></button>
+              <button
+                className="icon icon-pause"
+                onClick={() => {
+                  this.onTimerPause(id)
+                }}
+              ></button>
+              {`${minutes}:${seconds > 9 ? seconds : '0' + seconds}`}
             </span>
             <span className="description">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
           </label>
@@ -73,6 +112,7 @@ Task.defaultProps = {
   },
   minutes: 12,
   seconds: 54,
+  timeIsOver: false,
 }
 
 Task.propTypes = {
@@ -83,6 +123,7 @@ Task.propTypes = {
   itemProps: PropTypes.object.isRequired,
   minutes: PropTypes.number,
   seconds: PropTypes.number,
+  timeIsOver: PropTypes.bool,
 }
 
 export default Task

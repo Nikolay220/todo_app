@@ -8,7 +8,15 @@ import './App.scss'
 
 let taskId = 1
 
-function createNewListItem(id, description, status, statusBeforeEditing = '', minutes = 12, seconds = 25) {
+function createNewListItem(
+  id,
+  description,
+  status,
+  statusBeforeEditing = '',
+  minutes = 12,
+  seconds = 25,
+  timeIsOver = false
+) {
   return {
     id,
     status,
@@ -18,6 +26,7 @@ function createNewListItem(id, description, status, statusBeforeEditing = '', mi
     updatedAt: new Date(Date.now()),
     minutes,
     seconds,
+    timeIsOver,
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -50,7 +59,9 @@ class App extends React.Component {
     this.taskClickedHandler = (id) => {
       this.setState((state) => {
         const clickedTaskIndex = state.todoListItems.findIndex((value) => value.id === id)
-        const newArr = [...state.todoListItems]
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
         newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === '' ? 'completed' : ''
         newArr[clickedTaskIndex].statusBeforeEditing = newArr[clickedTaskIndex].status
         return { todoListItems: newArr }
@@ -63,7 +74,10 @@ class App extends React.Component {
 
     this.closeBtnHandler = (id) => {
       this.setState((state) => {
-        let newArr = state.todoListItems.filter((value) => {
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
+        newArr = newArr.filter((value) => {
           return value.id !== id
         })
         newArr.forEach((value) => {
@@ -75,7 +89,10 @@ class App extends React.Component {
 
     this.clearCompletedTasksHandler = () => {
       this.setState((state) => {
-        let newArr = state.todoListItems.filter((value) => {
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
+        newArr = newArr.filter((value) => {
           return value.status !== 'completed'
         })
         newArr.forEach((value) => {
@@ -87,18 +104,21 @@ class App extends React.Component {
 
     this.addTaskHandler = (taskObj) => {
       if (taskObj.task.trim()) {
-        let mins = Number(taskObj.minutes)
-        let secs = Number(taskObj.seconds)
-        let newItem = createNewListItem(
-          taskId++,
-          taskObj.task,
-          '',
-          '',
-          Number.isNaN(mins) ? undefined : mins,
-          Number.isNaN(secs) ? undefined : secs
-        )
+        let mins = undefined
+        let secs = undefined
+        if (taskObj.minutes.trim()) {
+          mins = Number(taskObj.minutes.trim())
+          mins = Number.isNaN(mins) || mins < 0 ? undefined : mins
+        }
+        if (taskObj.seconds.trim()) {
+          secs = Number(taskObj.seconds.trim())
+          secs = Number.isNaN(secs) || secs < 0 ? undefined : secs
+        }
+        let newItem = createNewListItem(taskId++, taskObj.task, '', '', mins, secs)
         this.setState((state) => {
-          let newArr = [...state.todoListItems]
+          let newArr = state.todoListItems.map((value) => {
+            return { ...value }
+          })
           newArr.push(newItem)
           let choosedFilterContent = this.state.curFilter
           if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
@@ -115,7 +135,9 @@ class App extends React.Component {
 
     this.editTaskHandler = (taskId) => {
       this.setState((state) => {
-        let newArr = [...state.todoListItems]
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
         let index = getIndexById(newArr, taskId)
         newArr[index].statusBeforeEditing = newArr[index].status
         newArr[index].status = 'editing'
@@ -127,7 +149,9 @@ class App extends React.Component {
       if (newText.trim()) {
         this.setState((state) => {
           let index = getIndexById(state.todoListItems, taskId)
-          let newArr = [...state.todoListItems]
+          let newArr = state.todoListItems.map((value) => {
+            return { ...value }
+          })
           newArr[index].status = newArr[index].statusBeforeEditing
           newArr[index].description = newText
           newArr.forEach((value) => {
@@ -136,6 +160,24 @@ class App extends React.Component {
           return { todoListItems: newArr }
         })
       }
+    }
+
+    this.decrementSecTimer = (id) => {
+      this.setState((state) => {
+        let index = getIndexById(state.todoListItems, id)
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
+        if (newArr[index].seconds) {
+          --newArr[index].seconds
+        } else if (newArr[index].minutes) {
+          --newArr[index].minutes
+          newArr[index].seconds = 59
+        } else {
+          newArr[index].timeIsOver = true
+        }
+        return { todoListItems: newArr }
+      })
     }
   }
 
@@ -154,6 +196,7 @@ class App extends React.Component {
             editTaskHandler={this.editTaskHandler}
             onEditFinished={this.onTaskEditFinished}
             curFilter={this.state.curFilter}
+            onTimerIteration={this.decrementSecTimer}
           />
           <Footer
             activeItems={getNumOfActiveTasks(this.state.todoListItems)}

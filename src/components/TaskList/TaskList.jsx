@@ -17,6 +17,7 @@ function TaskList({
   onTaskClicked,
   onCloseBtnClicked,
   curFilter,
+  onTimerIteration,
 } = {}) {
   const completedItems = todoListItems.map((item) => {
     let listItem
@@ -30,6 +31,7 @@ function TaskList({
               onTaskClicked={onTaskClicked}
               onEditFinished={onEditFinished}
               itemProps={item}
+              onTimerIteration={onTimerIteration}
             />
           )}
         </li>
@@ -44,6 +46,7 @@ function TaskList({
               onTaskClicked={onTaskClicked}
               onEditFinished={onEditFinished}
               itemProps={item}
+              onTimerIteration={onTimerIteration}
             />
           )}
         </li>
@@ -67,6 +70,9 @@ TaskList.defaultProps = {
   editTaskHandler: () => {
     throw new Error('editTaskHandler property is undefined! Check it!')
   },
+  onTimerIteration: () => {
+    throw new Error('onTimerIteration property is undefined! Check it!')
+  },
 }
 
 TaskList.propTypes = {
@@ -74,6 +80,7 @@ TaskList.propTypes = {
   onEditFinished: PropTypes.func,
   onTaskClicked: PropTypes.func,
   editTaskHandler: PropTypes.func,
+  onTimerIteration: PropTypes.func,
   todoListItems: PropTypes.array.isRequired,
   curFilter: PropTypes.string.isRequired,
 }

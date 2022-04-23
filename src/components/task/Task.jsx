@@ -11,21 +11,16 @@ class Task extends React.Component {
       value: props.itemProps.description,
     }
     this.onEditChangeHandler = this.onEditChangeHandler.bind(this)
-    this.intervals = {}
 
-    this.onTimerPlay = (id) => {
-      if (!this.props.itemProps.timeIsOver && !this.intervals[id])
-        this.intervals[id] = setInterval(() => {
-          this.props.onTimerIteration(id)
-        }, 1000)
-    }
+    // this.onTimerPlay = (id) => {
+    //   if (!this.props.itemProps.timeIsOver) {
+    //     this.props.addTimer(id)
+    //   }
+    // }
 
-    this.onTimerPause = (id) => {
-      if (this.intervals[id]) {
-        clearInterval(this.intervals[id])
-        delete this.intervals[id]
-      }
-    }
+    // this.onTimerPause = (id) => {
+    //   this.props.removeTimer(id)
+    // }
   }
 
   onEditChangeHandler(event) {
@@ -33,20 +28,20 @@ class Task extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // timer is finished
     if (prevProps.itemProps.timeIsOver !== this.props.itemProps.timeIsOver) {
-      clearInterval(this.intervals[this.props.itemProps.id])
-      delete this.intervals[this.props.itemProps.id]
+      this.props.onPauseTimer(this.props.itemProps.id)
     }
   }
 
   componentWillUnmount() {
-    Object.entries(this.intervals).forEach((value) => {
-      clearInterval(value[1])
-    })
+    // Object.entries(this.intervals).forEach((value) => {
+    //   clearInterval(value[1])
+    // })
   }
   render() {
     const { id, status, description, created, updatedAt, minutes, seconds } = this.props.itemProps
-    const { onEditFinished, onTaskClicked, onCloseBtnClicked, editTaskHandler } = this.props
+    const { onEditFinished, onTaskClicked, onCloseBtnClicked, editTaskHandler, onPlayTimer, onPauseTimer } = this.props
     return (
       <div>
         <div className="view">
@@ -64,13 +59,13 @@ class Task extends React.Component {
               <button
                 className="icon icon-play"
                 onClick={() => {
-                  this.onTimerPlay(id)
+                  onPlayTimer(id)
                 }}
               ></button>
               <button
                 className="icon icon-pause"
                 onClick={() => {
-                  this.onTimerPause(id)
+                  onPauseTimer(id)
                 }}
               ></button>
               {`${minutes}:${seconds > 9 ? seconds : '0' + seconds}`}

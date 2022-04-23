@@ -15,7 +15,8 @@ function createNewListItem(
   statusBeforeEditing = '',
   minutes = 12,
   seconds = 25,
-  timeIsOver = false
+  timeIsOver = false,
+  timerId = null
 ) {
   return {
     id,
@@ -27,6 +28,7 @@ function createNewListItem(
     minutes,
     seconds,
     timeIsOver,
+    timerId,
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -55,7 +57,49 @@ class App extends React.Component {
       ],
       curFilter: 'All',
     }
-
+    this.decrementSecTimer = (id) => {
+      this.setState((state) => {
+        let index = getIndexById(state.todoListItems, id)
+        let newArr = state.todoListItems.map((value) => {
+          return { ...value }
+        })
+        if (newArr[index].seconds) {
+          --newArr[index].seconds
+        } else if (newArr[index].minutes) {
+          --newArr[index].minutes
+          newArr[index].seconds = 59
+        } else {
+          newArr[index].timeIsOver = true
+        }
+        return { todoListItems: newArr }
+      })
+    }
+    this.addTimer = (id) => {
+      const clickedTaskIndex = this.state.todoListItems.findIndex((value) => value.id === id)
+      if (!this.state.todoListItems[clickedTaskIndex].timerId && !this.state.todoListItems[clickedTaskIndex].timeIsOver)
+        this.setState((state) => {
+          let newArr = state.todoListItems.map((value) => {
+            return { ...value }
+          })
+          newArr[clickedTaskIndex].timerId = setInterval(() => {
+            this.decrementSecTimer(id)
+          }, 1000)
+          return { todoListItems: newArr }
+        })
+    }
+    this.removeTimer = (id) => {
+      const clickedTaskIndex = this.state.todoListItems.findIndex((value) => value.id === id)
+      if (this.state.todoListItems[clickedTaskIndex].timerId) {
+        this.setState((state) => {
+          let newArr = state.todoListItems.map((value) => {
+            return { ...value }
+          })
+          clearInterval(newArr[clickedTaskIndex].timerId)
+          newArr[clickedTaskIndex].timerId = null
+          return { todoListItems: newArr }
+        })
+      }
+    }
     this.taskClickedHandler = (id) => {
       this.setState((state) => {
         const clickedTaskIndex = state.todoListItems.findIndex((value) => value.id === id)
@@ -78,6 +122,7 @@ class App extends React.Component {
           return { ...value }
         })
         newArr = newArr.filter((value) => {
+          if (value.id === id && value.timerId) clearInterval(value.timerId)
           return value.id !== id
         })
         newArr.forEach((value) => {
@@ -93,6 +138,7 @@ class App extends React.Component {
           return { ...value }
         })
         newArr = newArr.filter((value) => {
+          if (value.status === 'completed' && value.timerId) clearInterval(value.timerId)
           return value.status !== 'completed'
         })
         newArr.forEach((value) => {
@@ -161,24 +207,6 @@ class App extends React.Component {
         })
       }
     }
-
-    this.decrementSecTimer = (id) => {
-      this.setState((state) => {
-        let index = getIndexById(state.todoListItems, id)
-        let newArr = state.todoListItems.map((value) => {
-          return { ...value }
-        })
-        if (newArr[index].seconds) {
-          --newArr[index].seconds
-        } else if (newArr[index].minutes) {
-          --newArr[index].minutes
-          newArr[index].seconds = 59
-        } else {
-          newArr[index].timeIsOver = true
-        }
-        return { todoListItems: newArr }
-      })
-    }
   }
 
   render() {
@@ -196,7 +224,8 @@ class App extends React.Component {
             editTaskHandler={this.editTaskHandler}
             onEditFinished={this.onTaskEditFinished}
             curFilter={this.state.curFilter}
-            onTimerIteration={this.decrementSecTimer}
+            onPlayTimer={this.addTimer}
+            onPauseTimer={this.removeTimer}
           />
           <Footer
             activeItems={getNumOfActiveTasks(this.state.todoListItems)}

@@ -10,51 +10,81 @@ function taskIsDisplayed(taskContent, curFilter) {
   else if (curFilter === 'Completed' && taskContent.statusBeforeEditing === 'completed') return true
   return false
 }
-function TaskList({
-  onEditFinished,
-  editTaskHandler,
-  todoListItems,
-  onTaskClicked,
-  onCloseBtnClicked,
-  curFilter,
-  onTimerIteration,
-} = {}) {
-  const completedItems = todoListItems.map((item) => {
-    let listItem
-    if (item.status) {
-      listItem = (
-        <li className={item.status} key={item.id}>
-          {taskIsDisplayed(item, curFilter) && (
-            <Task
-              editTaskHandler={editTaskHandler}
-              onCloseBtnClicked={onCloseBtnClicked}
-              onTaskClicked={onTaskClicked}
-              onEditFinished={onEditFinished}
-              itemProps={item}
-              onTimerIteration={onTimerIteration}
-            />
-          )}
-        </li>
-      )
-    } else {
-      listItem = (
-        <li key={item.id}>
-          {taskIsDisplayed(item, curFilter) && (
-            <Task
-              editTaskHandler={editTaskHandler}
-              onCloseBtnClicked={onCloseBtnClicked}
-              onTaskClicked={onTaskClicked}
-              onEditFinished={onEditFinished}
-              itemProps={item}
-              onTimerIteration={onTimerIteration}
-            />
-          )}
-        </li>
-      )
-    }
-    return listItem
-  })
-  return <ul className="todo-list">{completedItems}</ul>
+class TaskList extends React.Component {
+  constructor(props) {
+    super(props)
+    // this.intervals = {}
+    // this.addTimer = (id) => {
+    //   if (!this.intervals[id])
+    //     this.intervals[id] = setInterval(() => {
+    //       this.props.onTimerIteration(id)
+    //     }, 1000)
+    // }
+    // this.removeTimer = (id) => {
+    //   if (this.intervals[id]) {
+    //     clearInterval(this.intervals[id])
+    //     delete this.intervals[id]
+    //   }
+    // }
+  }
+
+  componentWillUnmount() {
+    Object.entries(this.intervals).forEach((value) => {
+      clearInterval(value[1])
+    })
+  }
+
+  // componentDidUpdate(pre)
+  render() {
+    const {
+      onEditFinished,
+      editTaskHandler,
+      todoListItems,
+      onTaskClicked,
+      onCloseBtnClicked,
+      curFilter,
+      onPlayTimer,
+      onPauseTimer,
+    } = this.props
+    const completedItems = todoListItems.map((item) => {
+      let listItem
+      if (item.status) {
+        listItem = (
+          <li className={item.status} key={item.id}>
+            {taskIsDisplayed(item, curFilter) && (
+              <Task
+                editTaskHandler={editTaskHandler}
+                onCloseBtnClicked={onCloseBtnClicked}
+                onTaskClicked={onTaskClicked}
+                onEditFinished={onEditFinished}
+                itemProps={item}
+                onPlayTimer={onPlayTimer}
+                onPauseTimer={onPauseTimer}
+              />
+            )}
+          </li>
+        )
+      } else {
+        listItem = (
+          <li key={item.id}>
+            {taskIsDisplayed(item, curFilter) && (
+              <Task
+                editTaskHandler={editTaskHandler}
+                onCloseBtnClicked={onCloseBtnClicked}
+                onTaskClicked={onTaskClicked}
+                onEditFinished={onEditFinished}
+                itemProps={item}
+                onPlayTimer={onPlayTimer}
+                onPauseTimer={onPauseTimer}
+              />
+            )}
+          </li>
+        )
+      }
+      return listItem
+    })
+    return <ul className="todo-list">{completedItems}</ul>
+  }
 }
 
 TaskList.defaultProps = {

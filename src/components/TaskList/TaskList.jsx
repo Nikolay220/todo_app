@@ -13,19 +13,6 @@ function taskIsDisplayed(taskContent, curFilter) {
 class TaskList extends React.Component {
   constructor(props) {
     super(props)
-    // this.intervals = {}
-    // this.addTimer = (id) => {
-    //   if (!this.intervals[id])
-    //     this.intervals[id] = setInterval(() => {
-    //       this.props.onTimerIteration(id)
-    //     }, 1000)
-    // }
-    // this.removeTimer = (id) => {
-    //   if (this.intervals[id]) {
-    //     clearInterval(this.intervals[id])
-    //     delete this.intervals[id]
-    //   }
-    // }
   }
 
   componentWillUnmount() {
@@ -34,7 +21,6 @@ class TaskList extends React.Component {
     })
   }
 
-  // componentDidUpdate(pre)
   render() {
     const {
       onEditFinished,

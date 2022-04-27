@@ -11,16 +11,6 @@ class Task extends React.Component {
       value: props.itemProps.description,
     }
     this.onEditChangeHandler = this.onEditChangeHandler.bind(this)
-
-    // this.onTimerPlay = (id) => {
-    //   if (!this.props.itemProps.timeIsOver) {
-    //     this.props.addTimer(id)
-    //   }
-    // }
-
-    // this.onTimerPause = (id) => {
-    //   this.props.removeTimer(id)
-    // }
   }
 
   onEditChangeHandler(event) {

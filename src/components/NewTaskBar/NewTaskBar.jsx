@@ -1,35 +1,35 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import './NewTaskBar.scss'
 
-class NewTaskBar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { curVal: '' }
-    this.inputChangeHandler = (evt) => {
-      this.setState({ curVal: evt.target.value })
-    }
-    this.onSubmit = (evt) => {
-      evt.preventDefault()
-      this.props.onFormSubmit(this.state.curVal)
-      this.setState({ curVal: '' })
-    }
-  }
+const NewTaskBar = (props) => {
+  const [enteredTask, setEnteredTask] = useState('')
 
-  render() {
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          value={this.state.curVal}
-          onChange={this.inputChangeHandler}
-          autoFocus
-        />
-      </form>
-    )
-  }
+  useEffect(() => {
+    console.log(enteredTask)
+  })
+  const inputChangeHandler = useCallback((evt) => {
+    setEnteredTask(evt.target.value)
+  }, [])
+
+  const onSubmit = useCallback((enteredTask, evt) => {
+    evt.preventDefault()
+    props.onFormSubmit(enteredTask)
+    setEnteredTask('')
+  }, [])
+
+  return (
+    <form onSubmit={onSubmit.bind(null, enteredTask)}>
+      <input
+        className="new-todo"
+        placeholder="What needs to be done?"
+        value={enteredTask}
+        onChange={inputChangeHandler}
+        autoFocus
+      />
+    </form>
+  )
 }
 
 NewTaskBar.defaultProps = {

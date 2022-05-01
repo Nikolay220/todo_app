@@ -46,7 +46,7 @@ const App = () => {
   const taskClickedHandler = useCallback((id) => {
     setState((state) => {
       const clickedTaskIndex = state.todoListItems.findIndex((value) => value.id === id)
-      const newArr = [...state.todoListItems]
+      let newArr = state.todoListItems.map((val) => ({ ...val }))
       newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === '' ? 'completed' : ''
       newArr[clickedTaskIndex].statusBeforeEditing = newArr[clickedTaskIndex].status
       return { todoListItems: newArr, curFilter: state.curFilter }
@@ -88,7 +88,7 @@ const App = () => {
     if (text.trim()) {
       let newItem = createNewListItem(taskId++, text, '')
       setState((state) => {
-        let newArr = [...state.todoListItems]
+        let newArr = state.todoListItems.map((val) => ({ ...val }))
         newArr.push(newItem)
         let choosedFilterContent = state.curFilter
         if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
@@ -105,7 +105,7 @@ const App = () => {
 
   const editTaskHandler = useCallback((taskId) => {
     setState((state) => {
-      let newArr = [...state.todoListItems]
+      let newArr = state.todoListItems.map((val) => ({ ...val }))
       let index = getIndexById(newArr, taskId)
       newArr[index].statusBeforeEditing = newArr[index].status
       newArr[index].status = 'editing'
@@ -120,7 +120,7 @@ const App = () => {
     if (newText.trim()) {
       setState((state) => {
         let index = getIndexById(state.todoListItems, taskId)
-        let newArr = [...state.todoListItems]
+        let newArr = state.todoListItems.map((val) => ({ ...val }))
         newArr[index].status = newArr[index].statusBeforeEditing
         newArr[index].description = newText
         newArr.forEach((value) => {

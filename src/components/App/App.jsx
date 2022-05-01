@@ -48,7 +48,7 @@ class App extends React.Component {
     this.taskClickedHandler = (id) => {
       this.setState((state) => {
         const clickedTaskIndex = state.todoListItems.findIndex((value) => value.id === id)
-        const newArr = [...state.todoListItems]
+        const newArr = state.todoListItems.map((val) => ({ ...val }))
         newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === '' ? 'completed' : ''
         newArr[clickedTaskIndex].statusBeforeEditing = newArr[clickedTaskIndex].status
         return { todoListItems: newArr }
@@ -87,7 +87,7 @@ class App extends React.Component {
       if (text.trim()) {
         let newItem = createNewListItem(taskId++, text, '')
         this.setState((state) => {
-          let newArr = [...state.todoListItems]
+          let newArr = state.todoListItems.map((val) => ({ ...val }))
           newArr.push(newItem)
           let choosedFilterContent = this.state.curFilter
           if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
@@ -104,7 +104,7 @@ class App extends React.Component {
 
     this.editTaskHandler = (taskId) => {
       this.setState((state) => {
-        let newArr = [...state.todoListItems]
+        let newArr = state.todoListItems.map((val) => ({ ...val }))
         let index = getIndexById(newArr, taskId)
         newArr[index].statusBeforeEditing = newArr[index].status
         newArr[index].status = 'editing'
@@ -116,7 +116,7 @@ class App extends React.Component {
       if (newText.trim()) {
         this.setState((state) => {
           let index = getIndexById(state.todoListItems, taskId)
-          let newArr = [...state.todoListItems]
+          let newArr = state.todoListItems.map((val) => ({ ...val }))
           newArr[index].status = newArr[index].statusBeforeEditing
           newArr[index].description = newText
           newArr.forEach((value) => {

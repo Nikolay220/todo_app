@@ -20,8 +20,8 @@
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
-    "indent": ["error", 2],
-    "prettier/prettier": ["error", { "semi": false }],
+    "indent": ["error",2, { "ignoredNodes": ["ConditionalExpression"] }],
+    "prettier/prettier": [0],
     "linebreak-style": [0, "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],

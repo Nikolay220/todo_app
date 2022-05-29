@@ -29,7 +29,10 @@ class Task extends React.Component {
           />
           <label onClick={() => onTaskClicked(id)}>
             <span className="description">{description}</span>
-            <span className="created">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
+            <span className="created">{`created ${formatDistanceStrict(
+              new Date(created),
+              new Date(updatedAt)
+            )} ago`}</span>
           </label>
           <button onClick={() => editTaskHandler(id)} className="icon icon-edit"></button>
           <button onClick={onCloseBtnClicked.bind(this, id)} className="icon icon-destroy"></button>

@@ -1,12 +1,12 @@
 import React from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
+import LocalStorageService from '../../services/LocalStorageService'
 import Footer from '../Footer'
 import TaskList from '../TaskList'
 import NewTaskBar from '../NewTaskBar'
 
 import './App.scss'
-
-let taskId = 1
 
 function createNewListItem(id, description, status, statusBeforeEditing = '') {
   return {
@@ -14,8 +14,8 @@ function createNewListItem(id, description, status, statusBeforeEditing = '') {
     status,
     statusBeforeEditing,
     description,
-    created: new Date(Date.now()),
-    updatedAt: new Date(Date.now()),
+    created: Date.now(),
+    updatedAt: Date.now(),
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -38,9 +38,9 @@ class App extends React.Component {
     super(props)
     this.state = {
       todoListItems: [
-        createNewListItem(taskId++, 'Completed task', 'completed', 'completed'),
-        createNewListItem(taskId++, 'Editing task', 'editing'),
-        createNewListItem(taskId++, 'Active task', ''),
+        createNewListItem(uuidv4(), 'Completed task', 'completed', 'completed'),
+        createNewListItem(uuidv4(), 'Editing task', 'editing'),
+        createNewListItem(uuidv4(), 'Active task', ''),
       ],
       curFilter: 'All',
     }
@@ -65,7 +65,7 @@ class App extends React.Component {
           return value.id !== id
         })
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return { todoListItems: newArr }
       })
@@ -77,7 +77,7 @@ class App extends React.Component {
           return value.status !== 'completed'
         })
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return { todoListItems: newArr }
       })
@@ -85,14 +85,14 @@ class App extends React.Component {
 
     this.addTaskHandler = (text) => {
       if (text.trim()) {
-        let newItem = createNewListItem(taskId++, text, '')
+        let newItem = createNewListItem(uuidv4(), text, '')
         this.setState((state) => {
           let newArr = state.todoListItems.map((val) => ({ ...val }))
           newArr.push(newItem)
           let choosedFilterContent = this.state.curFilter
           if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
           newArr.forEach((value) => {
-            value.updatedAt = new Date(Date.now())
+            value.updatedAt = Date.now()
           })
           return {
             todoListItems: newArr,
@@ -120,14 +120,22 @@ class App extends React.Component {
           newArr[index].status = newArr[index].statusBeforeEditing
           newArr[index].description = newText
           newArr.forEach((value) => {
-            value.updatedAt = new Date(Date.now())
+            value.updatedAt = Date.now()
           })
           return { todoListItems: newArr }
         })
       }
     }
   }
-
+  componentDidMount() {
+    window.onbeforeunload = () => {
+      LocalStorageService.setTodos(JSON.stringify(this.state.todoListItems))
+    }
+    let savedTodos = JSON.parse(LocalStorageService.getTodos())
+    if (savedTodos) {
+      this.setState({ todoListItems: savedTodos })
+    }
+  }
   render() {
     return (
       <section className="todoapp">

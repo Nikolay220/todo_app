@@ -144,6 +144,7 @@ class App extends React.Component {
           <NewTaskBar onFormSubmit={this.addTaskHandler} />
         </header>
         <section className="main">
+          {!this.state.todoListItems.length && <p className={'main__empty-list-message'}>Todo list is empty</p>}
           <TaskList
             onCloseBtnClicked={this.closeBtnHandler}
             onTaskClicked={this.taskClickedHandler}

@@ -10,8 +10,8 @@ class NewTaskBar extends React.Component {
     this.inputChangeHandler = (evt) => {
       this.setState({ curVal: evt.target.value })
     }
+    const { onFormSubmit } = this.props
     this.onSubmit = (evt) => {
-      const onFormSubmit = this.props
       evt.preventDefault()
       onFormSubmit(this.state.curVal)
       this.setState({ curVal: '' })

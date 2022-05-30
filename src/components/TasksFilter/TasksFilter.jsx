@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 
 import './TasksFilter.scss'
 
-function TasksFilter({ filterContent, selected, filterBtnHandler }) {
+function TasksFilter({ filterContent, selected, filterHandler }) {
   if (selected) {
     return <button className="selected">{filterContent}</button>
   }
   return (
     <button
       onClick={() => {
-        filterBtnHandler(filterContent)
+        filterHandler(filterContent)
       }}
     >
       {filterContent}
@@ -19,13 +19,13 @@ function TasksFilter({ filterContent, selected, filterBtnHandler }) {
 }
 
 TasksFilter.defaultProps = {
-  filterBtnHandler: () => {
-    throw new Error('filterBtnHandler property is undefined! Check it!')
+  filterHandler: () => {
+    throw new Error('filterHandler property is undefined! Check it!')
   },
 }
 
 TasksFilter.propTypes = {
-  filterBtnHandler: PropTypes.func,
+  filterHandler: PropTypes.func,
   filterContent: PropTypes.string.isRequired,
   selected: PropTypes.bool.isRequired,
 }

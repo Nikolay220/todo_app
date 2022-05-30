@@ -11,8 +11,9 @@ class NewTaskBar extends React.Component {
       this.setState({ curVal: evt.target.value })
     }
     this.onSubmit = (evt) => {
+      const onFormSubmit = this.props
       evt.preventDefault()
-      this.props.onFormSubmit(this.state.curVal)
+      onFormSubmit(this.state.curVal)
       this.setState({ curVal: '' })
     }
   }

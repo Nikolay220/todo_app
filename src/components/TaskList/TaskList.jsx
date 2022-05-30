@@ -2,31 +2,27 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Task from '../Task'
-
+import ACTIONS from '../../actions'
+import FILTERS from '../../filters'
 import './TaskList.scss'
-function taskIsDisplayed(taskContent, curFilter) {
-  if (curFilter === 'All') return true
-  else if (curFilter === 'Active' && taskContent.statusBeforeEditing === '') return true
-  else if (curFilter === 'Completed' && taskContent.statusBeforeEditing === 'completed') return true
+const { EMPTY, COMPLETED } = ACTIONS
+const { ALL, ACTIVE, COMPLETED: COMPLETED_FILTER } = FILTERS
+function isTaskDisplayed(taskContent, curFilter) {
+  if (curFilter === ALL) return true
+  else if (curFilter === ACTIVE && taskContent.statusBeforeEditing === EMPTY) return true
+  else if (curFilter === COMPLETED_FILTER && taskContent.statusBeforeEditing === COMPLETED) return true
   return false
 }
-function TaskList({
-  onEditFinished,
-  editTaskHandler,
-  todoListItems,
-  onTaskClicked,
-  onCloseBtnClicked,
-  curFilter,
-} = {}) {
+function TaskList({ onEditFinished, editTaskHandler, todoListItems, onTaskClicked, onDeleteClicked, curFilter } = {}) {
   const completedItems = todoListItems.map((item) => {
     let listItem
     if (item.status) {
       listItem = (
         <li className={item.status} key={item.id}>
-          {taskIsDisplayed(item, curFilter) && (
+          {isTaskDisplayed(item, curFilter) && (
             <Task
               editTaskHandler={editTaskHandler}
-              onCloseBtnClicked={onCloseBtnClicked}
+              onDeleteClicked={onDeleteClicked}
               onTaskClicked={onTaskClicked}
               onEditFinished={onEditFinished}
               itemProps={item}
@@ -37,10 +33,10 @@ function TaskList({
     } else {
       listItem = (
         <li key={item.id}>
-          {taskIsDisplayed(item, curFilter) && (
+          {isTaskDisplayed(item, curFilter) && (
             <Task
               editTaskHandler={editTaskHandler}
-              onCloseBtnClicked={onCloseBtnClicked}
+              onDeleteClicked={onDeleteClicked}
               onTaskClicked={onTaskClicked}
               onEditFinished={onEditFinished}
               itemProps={item}
@@ -55,8 +51,8 @@ function TaskList({
 }
 
 TaskList.defaultProps = {
-  onCloseBtnClicked: () => {
-    throw new Error('onCloseBtnClicked property is undefined! Check it!')
+  onDeleteClicked: () => {
+    throw new Error('onDeleteClicked property is undefined! Check it!')
   },
   onEditFinished: () => {
     throw new Error('onEditFinished property is undefined! Check it!')
@@ -70,7 +66,7 @@ TaskList.defaultProps = {
 }
 
 TaskList.propTypes = {
-  onCloseBtnClicked: PropTypes.func,
+  onDeleteClicked: PropTypes.func,
   onEditFinished: PropTypes.func,
   onTaskClicked: PropTypes.func,
   editTaskHandler: PropTypes.func,

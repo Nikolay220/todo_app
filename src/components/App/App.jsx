@@ -136,11 +136,13 @@ const App = () => {
   }, [])
   useEffect(() => {
     window.onbeforeunload = () => {
-      LocalStorageService.setTodos(JSON.stringify(this.state.todoListItems))
+      LocalStorageService.setTodos(JSON.stringify(state.todoListItems))
     }
     let savedTodos = JSON.parse(LocalStorageService.getTodos())
     if (savedTodos) {
-      this.setState({ todoListItems: savedTodos })
+      setState((state) => {
+        return { todoListItems: savedTodos, curFilter: state.curFilter }
+      })
     }
   }, [])
   return (
@@ -150,7 +152,7 @@ const App = () => {
         <NewTaskBar onFormSubmit={addTaskHandler} />
       </header>
       <section className="main">
-        {!this.state.todoListItems.length && <p className="main__empty-list-message">Todo list is empty</p>}
+        {!state.todoListItems.length && <p className="main__empty-list-message">Todo list is empty</p>}
         <TaskList
           onDeleteClicked={deleteHandler}
           onTaskClicked={taskClickedHandler}

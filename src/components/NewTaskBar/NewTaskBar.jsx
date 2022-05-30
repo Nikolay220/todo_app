@@ -10,9 +10,10 @@ class NewTaskBar extends React.Component {
     this.inputChangeHandler = (changedState, evt) => {
       this.setState({ [changedState]: evt.target.value })
     }
+    const { onAddTask } = this.props
     this.onSubmit = (evt) => {
       if (evt.key === 'Enter') {
-        this.props.onAddTask(this.state)
+        onAddTask(this.state)
         this.setState({ task: '', minutes: '', seconds: '' })
       }
     }

@@ -1,18 +1,22 @@
 import React from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
+import LocalStorageService from '../../services/LocalStorageService'
 import Footer from '../Footer'
 import TaskList from '../TaskList'
 import NewTaskBar from '../NewTaskBar'
-
+import ACTIONS from '../../actions'
+import FILTERS from '../../filters'
 import './App.scss'
 
-let taskId = 1
+const { EMPTY, EDITING, COMPLETED } = ACTIONS
+const { ALL, COMPLETED: COMPLETED_FILTER } = FILTERS
 
 function createNewListItem(
   id,
   description,
   status,
-  statusBeforeEditing = '',
+  statusBeforeEditing = EMPTY,
   minutes = 12,
   seconds = 25,
   timeIsOver = false,
@@ -23,8 +27,8 @@ function createNewListItem(
     status,
     statusBeforeEditing,
     description,
-    created: new Date(Date.now()),
-    updatedAt: new Date(Date.now()),
+    created: Date.now(),
+    updatedAt: Date.now(),
     minutes,
     seconds,
     timeIsOver,
@@ -51,11 +55,11 @@ class App extends React.Component {
     super(props)
     this.state = {
       todoListItems: [
-        createNewListItem(taskId++, 'completed', 'completed', 'completed'),
-        createNewListItem(taskId++, 'edit', 'editing'),
-        createNewListItem(taskId++, 'active', ''),
+        createNewListItem(uuidv4(), 'Completed task', COMPLETED, COMPLETED),
+        createNewListItem(uuidv4(), 'Editing task', EDITING),
+        createNewListItem(uuidv4(), 'Active task', EMPTY),
       ],
-      curFilter: 'All',
+      curFilter: ALL,
     }
     this.decrementSecTimer = (id) => {
       this.setState((state) => {
@@ -106,17 +110,17 @@ class App extends React.Component {
         let newArr = state.todoListItems.map((value) => {
           return { ...value }
         })
-        newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === '' ? 'completed' : ''
+        newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === EMPTY ? COMPLETED : EMPTY
         newArr[clickedTaskIndex].statusBeforeEditing = newArr[clickedTaskIndex].status
         return { todoListItems: newArr }
       })
     }
 
-    this.filterBtnHandler = (choosedFilter) => {
+    this.filterHandler = (choosedFilter) => {
       this.setState({ curFilter: choosedFilter })
     }
 
-    this.closeBtnHandler = (id) => {
+    this.deleteHandler = (id) => {
       this.setState((state) => {
         let newArr = state.todoListItems.map((value) => {
           return { ...value }
@@ -126,7 +130,7 @@ class App extends React.Component {
           return value.id !== id
         })
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return { todoListItems: newArr }
       })
@@ -138,11 +142,11 @@ class App extends React.Component {
           return { ...value }
         })
         newArr = newArr.filter((value) => {
-          if (value.status === 'completed' && value.timerId) clearInterval(value.timerId)
-          return value.status !== 'completed'
+          if (value.status === COMPLETED && value.timerId) clearInterval(value.timerId)
+          return value.status !== COMPLETED
         })
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return { todoListItems: newArr }
       })
@@ -160,16 +164,16 @@ class App extends React.Component {
           secs = Number(taskObj.seconds.trim())
           secs = Number.isNaN(secs) || secs < 0 ? undefined : secs
         }
-        let newItem = createNewListItem(taskId++, taskObj.task, '', '', mins, secs)
+        let newItem = createNewListItem(uuidv4(), taskObj.task, EMPTY, EMPTY, mins, secs)
         this.setState((state) => {
           let newArr = state.todoListItems.map((value) => {
             return { ...value }
           })
           newArr.push(newItem)
           let choosedFilterContent = this.state.curFilter
-          if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
+          if (choosedFilterContent === COMPLETED_FILTER) choosedFilterContent = ALL
           newArr.forEach((value) => {
-            value.updatedAt = new Date(Date.now())
+            value.updatedAt = Date.now()
           })
           return {
             todoListItems: newArr,
@@ -186,7 +190,7 @@ class App extends React.Component {
         })
         let index = getIndexById(newArr, taskId)
         newArr[index].statusBeforeEditing = newArr[index].status
-        newArr[index].status = 'editing'
+        newArr[index].status = EDITING
         return { todoListItems: newArr }
       })
     }
@@ -201,14 +205,22 @@ class App extends React.Component {
           newArr[index].status = newArr[index].statusBeforeEditing
           newArr[index].description = newText
           newArr.forEach((value) => {
-            value.updatedAt = new Date(Date.now())
+            value.updatedAt = Date.now()
           })
           return { todoListItems: newArr }
         })
       }
     }
   }
-
+  componentDidMount() {
+    window.onbeforeunload = () => {
+      LocalStorageService.setTodos(JSON.stringify(this.state.todoListItems))
+    }
+    let savedTodos = JSON.parse(LocalStorageService.getTodos())
+    if (savedTodos) {
+      this.setState({ todoListItems: savedTodos })
+    }
+  }
   render() {
     return (
       <section className="todoapp">
@@ -217,8 +229,9 @@ class App extends React.Component {
           <NewTaskBar onAddTask={this.addTaskHandler} />
         </header>
         <section className="main">
+          {!this.state.todoListItems.length && <p className="main__empty-list-message">Todo list is empty</p>}
           <TaskList
-            onCloseBtnClicked={this.closeBtnHandler}
+            onDeleteClicked={this.deleteHandler}
             onTaskClicked={this.taskClickedHandler}
             todoListItems={this.state.todoListItems}
             editTaskHandler={this.editTaskHandler}
@@ -230,7 +243,7 @@ class App extends React.Component {
           <Footer
             activeItems={getNumOfActiveTasks(this.state.todoListItems)}
             clearCompletedTasksHandler={this.clearCompletedTasksHandler}
-            filterBtnHandler={this.filterBtnHandler}
+            filterHandler={this.filterHandler}
             curFilter={this.state.curFilter}
           />
         </section>

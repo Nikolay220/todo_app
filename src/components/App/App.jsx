@@ -1,21 +1,25 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
+import LocalStorageService from '../../services/LocalStorageService'
 import Footer from '../Footer'
 import TaskList from '../TaskList'
 import NewTaskBar from '../NewTaskBar'
-
+import ACTIONS from '../../actions'
+import FILTERS from '../../filters'
 import './App.scss'
 
-let taskId = 1
+const { EMPTY, EDITING, COMPLETED } = ACTIONS
+const { ALL, COMPLETED: COMPLETED_FILTER } = FILTERS
 
-function createNewListItem(id, description, status, statusBeforeEditing = '') {
+function createNewListItem(id, description, status, statusBeforeEditing = EMPTY) {
   return {
     id,
     status,
     statusBeforeEditing,
     description,
-    created: new Date(Date.now()),
-    updatedAt: new Date(Date.now()),
+    created: Date.now(),
+    updatedAt: Date.now(),
   }
 }
 function getNumOfActiveTasks(arrayOfTasks) {
@@ -36,37 +40,37 @@ function getIndexById(objsArr, id) {
 const App = () => {
   const [state, setState] = useState({
     todoListItems: [
-      createNewListItem(taskId++, 'Completed task', 'completed', 'completed'),
-      createNewListItem(taskId++, 'Editing task', 'editing'),
-      createNewListItem(taskId++, 'Active task', ''),
+      createNewListItem(uuidv4(), 'Completed task', COMPLETED, COMPLETED),
+      createNewListItem(uuidv4(), 'Editing task', EDITING),
+      createNewListItem(uuidv4(), 'Active task', EMPTY),
     ],
-    curFilter: 'All',
+    curFilter: ALL,
   })
 
   const taskClickedHandler = useCallback((id) => {
     setState((state) => {
       const clickedTaskIndex = state.todoListItems.findIndex((value) => value.id === id)
       let newArr = state.todoListItems.map((val) => ({ ...val }))
-      newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === '' ? 'completed' : ''
+      newArr[clickedTaskIndex].status = newArr[clickedTaskIndex].status === EMPTY ? COMPLETED : EMPTY
       newArr[clickedTaskIndex].statusBeforeEditing = newArr[clickedTaskIndex].status
       return { todoListItems: newArr, curFilter: state.curFilter }
     })
   }, [])
 
-  const filterBtnHandler = useCallback((choosedFilter) => {
+  const filterHandler = useCallback((choosedFilter) => {
     setState((state) => ({
       todoListItems: state.todoListItems,
       curFilter: choosedFilter,
     }))
   }, [])
 
-  const closeBtnHandler = useCallback((id) => {
+  const deleteHandler = useCallback((id) => {
     setState((state) => {
       let newArr = state.todoListItems.filter((value) => {
         return value.id !== id
       })
       newArr.forEach((value) => {
-        value.updatedAt = new Date(Date.now())
+        value.updatedAt = Date.now()
       })
       return { todoListItems: newArr, curFilter: state.curFilter }
     })
@@ -75,10 +79,10 @@ const App = () => {
   const clearCompletedTasksHandler = useCallback(() => {
     setState((state) => {
       let newArr = state.todoListItems.filter((value) => {
-        return value.status !== 'completed'
+        return value.status !== COMPLETED
       })
       newArr.forEach((value) => {
-        value.updatedAt = new Date(Date.now())
+        value.updatedAt = Date.now()
       })
       return { todoListItems: newArr, curFilter: state.curFilter }
     })
@@ -86,14 +90,14 @@ const App = () => {
 
   const addTaskHandler = useCallback((text) => {
     if (text.trim()) {
-      let newItem = createNewListItem(taskId++, text, '')
+      let newItem = createNewListItem(uuidv4(), text, EMPTY)
       setState((state) => {
         let newArr = state.todoListItems.map((val) => ({ ...val }))
         newArr.push(newItem)
         let choosedFilterContent = state.curFilter
-        if (choosedFilterContent === 'Completed') choosedFilterContent = 'All'
+        if (choosedFilterContent === COMPLETED_FILTER) choosedFilterContent = ALL
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return {
           todoListItems: newArr,
@@ -108,7 +112,7 @@ const App = () => {
       let newArr = state.todoListItems.map((val) => ({ ...val }))
       let index = getIndexById(newArr, taskId)
       newArr[index].statusBeforeEditing = newArr[index].status
-      newArr[index].status = 'editing'
+      newArr[index].status = EDITING
       return {
         todoListItems: newArr,
         curFilter: state.curFilter,
@@ -124,13 +128,21 @@ const App = () => {
         newArr[index].status = newArr[index].statusBeforeEditing
         newArr[index].description = newText
         newArr.forEach((value) => {
-          value.updatedAt = new Date(Date.now())
+          value.updatedAt = Date.now()
         })
         return { todoListItems: newArr, curFilter: state.curFilter }
       })
     }
   }, [])
-
+  useEffect(() => {
+    window.onbeforeunload = () => {
+      LocalStorageService.setTodos(JSON.stringify(this.state.todoListItems))
+    }
+    let savedTodos = JSON.parse(LocalStorageService.getTodos())
+    if (savedTodos) {
+      this.setState({ todoListItems: savedTodos })
+    }
+  }, [])
   return (
     <section className="todoapp">
       <header className="header">
@@ -138,8 +150,9 @@ const App = () => {
         <NewTaskBar onFormSubmit={addTaskHandler} />
       </header>
       <section className="main">
+        {!this.state.todoListItems.length && <p className="main__empty-list-message">Todo list is empty</p>}
         <TaskList
-          onCloseBtnClicked={closeBtnHandler}
+          onDeleteClicked={deleteHandler}
           onTaskClicked={taskClickedHandler}
           todoListItems={state.todoListItems}
           editTaskHandler={editTaskHandler}
@@ -149,7 +162,7 @@ const App = () => {
         <Footer
           activeItems={getNumOfActiveTasks(state.todoListItems)}
           clearCompletedTasksHandler={clearCompletedTasksHandler}
-          filterBtnHandler={filterBtnHandler}
+          filterHandler={filterHandler}
           curFilter={state.curFilter}
         />
       </section>

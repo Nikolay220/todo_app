@@ -5,11 +5,11 @@ import TasksFilters from '../TasksFilters'
 
 import './Footer.scss'
 
-function Footer({ clearCompletedTasksHandler, curFilter, filterBtnHandler, activeItems }) {
+function Footer({ clearCompletedTasksHandler, curFilter, filterHandler, activeItems }) {
   return (
     <footer className="footer">
       <span className="todo-count">{activeItems} items left</span>
-      <TasksFilters curFilter={curFilter} filterBtnHandler={filterBtnHandler} />
+      <TasksFilters curFilter={curFilter} filterHandler={filterHandler} />
       <button onClick={clearCompletedTasksHandler} className="clear-completed">
         Clear completed
       </button>
@@ -25,14 +25,14 @@ Footer.defaultProps = {
   clearCompletedTasksHandler: () => {
     throw new Error('clearCompletedTasksHandler property is undefined! Check it!')
   },
-  filterBtnHandler: () => {
-    throw new Error('filterBtnHandler property is undefined! Check it!')
+  filterHandler: () => {
+    throw new Error('filterHandler property is undefined! Check it!')
   },
 }
 Footer.propTypes = {
   clearCompletedTasksHandler: PropTypes.func,
   curFilter: PropTypes.string.isRequired,
-  filterBtnHandler: PropTypes.func,
+  filterHandler: PropTypes.func,
   activeItems: PropTypes.number.isRequired,
 }
 export default Footer

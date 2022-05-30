@@ -2,17 +2,22 @@ import React, { useState, useCallback } from 'react'
 import { formatDistanceStrict } from 'date-fns'
 import PropTypes from 'prop-types'
 
+import ACTIONS from '../../actions'
 import './Task.scss'
-
-const Task = (props) => {
-  const [desc, setDesc] = useState(props.itemProps.description)
+const { EDITING, COMPLETED } = ACTIONS
+const Task = ({
+  onEditFinished,
+  onTaskClicked,
+  onDeleteClicked,
+  editTaskHandler,
+  itemProps: { id, status, description, created, updatedAt },
+}) => {
+  const [desc, setDesc] = useState(description)
 
   const onEditChangeHandler = useCallback((event) => {
     setDesc(event.target.value)
   }, [])
 
-  const { id, status, description, created, updatedAt } = props.itemProps
-  const { onEditFinished, onTaskClicked, onCloseBtnClicked, editTaskHandler } = props
   return (
     <div>
       <div className="view">
@@ -20,16 +25,19 @@ const Task = (props) => {
           onChange={() => onTaskClicked(id)}
           className="toggle"
           type="checkbox"
-          checked={status === 'completed' ? true : false}
+          checked={status === COMPLETED ? true : false}
         />
         <label onClick={() => onTaskClicked(id)}>
           <span className="description">{description}</span>
-          <span className="created">{`created ${formatDistanceStrict(created, updatedAt)} ago`}</span>
+          <span className="created">{`created ${formatDistanceStrict(
+            new Date(created),
+            new Date(updatedAt)
+          )} ago`}</span>
         </label>
         <button onClick={() => editTaskHandler(id)} className="icon icon-edit"></button>
-        <button onClick={onCloseBtnClicked.bind(this, id)} className="icon icon-destroy"></button>
+        <button onClick={onDeleteClicked.bind(this, id)} className="icon icon-destroy"></button>
       </div>
-      {status === 'editing' && (
+      {status === EDITING && (
         <input
           autoFocus
           type="text"
@@ -46,8 +54,8 @@ const Task = (props) => {
 }
 
 Task.defaultProps = {
-  onCloseBtnClicked: () => {
-    throw new Error('onCloseBtnClicked property is undefined! Check it!')
+  onDeleteClicked: () => {
+    throw new Error('onDeleteClicked property is undefined! Check it!')
   },
   onEditFinished: () => {
     throw new Error('onEditFinished property is undefined! Check it!')
@@ -61,7 +69,7 @@ Task.defaultProps = {
 }
 
 Task.propTypes = {
-  onCloseBtnClicked: PropTypes.func,
+  onDeleteClicked: PropTypes.func,
   onEditFinished: PropTypes.func,
   onTaskClicked: PropTypes.func,
   editTaskHandler: PropTypes.func,

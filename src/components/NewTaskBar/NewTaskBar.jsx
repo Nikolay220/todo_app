@@ -1,21 +1,18 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import './NewTaskBar.scss'
 
-const NewTaskBar = (props) => {
+const NewTaskBar = ({ onFormSubmit }) => {
   const [enteredTask, setEnteredTask] = useState('')
 
-  useEffect(() => {
-    console.log(enteredTask)
-  })
   const inputChangeHandler = useCallback((evt) => {
     setEnteredTask(evt.target.value)
   }, [])
 
   const onSubmit = useCallback((enteredTask, evt) => {
     evt.preventDefault()
-    props.onFormSubmit(enteredTask)
+    onFormSubmit(enteredTask)
     setEnteredTask('')
   }, [])
 
